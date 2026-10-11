@@ -1,0 +1,1540 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b0b0d">
+<title>OC Studio</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#07070b;--side:#0a0a10;--panel:#111118;--panel2:#16161f;--input:#0d0d13;
+  --line:#1c1c27;--line2:#262633;--text:#ecebf3;--soft:#c9c6da;--muted:#8b88a0;--faint:#5d5a70;
+  --accent:#ff4f8b;--accent2:#a855f7;--grad:linear-gradient(135deg,#ff4f8b,#a855f7);--accent-ink:#fff;--accent-soft:rgba(168,85,247,.14);--accent-line:rgba(198,165,255,.42);--err:#ff7a8e;
+  --font:Sora,system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 var(--font)}
+button,input,select,textarea{font-family:var(--font)}
+.app{display:flex;min-height:100vh}
+
+/* sidebar */
+.side{width:240px;flex:0 0 240px;background:var(--side);border-right:1px solid #1d1d23;padding:26px 16px;display:flex;flex-direction:column;gap:26px;position:sticky;top:0;height:100vh}
+.logo{display:flex;align-items:center;gap:10px;padding:0 8px}
+.logo .mark{width:30px;height:30px;border-radius:9px;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-weight:800;font-size:13px}
+.logo b{font-weight:800;font-size:17px;letter-spacing:-.3px}
+.nav{display:flex;flex-direction:column;gap:3px}
+.nav button{display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:10px;border:none;background:none;color:var(--muted);font:600 14px var(--font);text-align:left;cursor:pointer}
+.nav button:hover{color:var(--text)}
+.nav button.on{background:#1a1a20;color:var(--text);font-weight:700}
+.nav svg{width:18px;height:18px;flex:0 0 auto}
+.nav .badge{margin-left:auto;font-size:11px;background:var(--accent);color:var(--accent-ink);border-radius:999px;padding:1px 8px;font-weight:800}
+.side-foot{margin-top:auto;display:flex;flex-direction:column;gap:8px}
+.model-card{border:1px solid var(--line);border-radius:12px;padding:12px;font-size:12px;color:var(--muted)}
+.model-card b{display:block;color:var(--text);font-size:13px;font-weight:700}
+
+/* mobile chrome */
+.topbar{display:none}
+.bottombar{display:none}
+
+main{flex:1 1 auto;min-width:0;padding:34px 44px 60px}
+section{display:none;animation:fade .2s ease}section.on{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:none}}
+.head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:22px}
+.kicker{font-size:13px;color:var(--muted);font-weight:600}
+h1{margin:4px 0 0;font-size:38px;font-weight:800;letter-spacing:-1.1px;line-height:1.1}
+.actions{display:flex;gap:10px;flex-wrap:wrap}
+
+/* buttons */
+.btn{height:46px;padding:0 20px;border-radius:12px;border:none;background:var(--accent);color:var(--accent-ink);font:800 14px var(--font);cursor:pointer;white-space:nowrap}
+.btn.light{background:var(--text);color:var(--bg)}
+.btn.ghost{background:transparent;border:1px solid var(--line2);color:var(--text);font-weight:600}
+.btn.quiet{background:transparent;border:1px solid var(--line2);color:var(--muted);font-weight:600}
+.btn.wide{width:100%}
+.btn:disabled{opacity:.45;cursor:default}
+.link{background:none;border:none;color:var(--muted);font:600 13px var(--font);text-decoration:underline;cursor:pointer;padding:6px 0}
+.x{width:34px;height:34px;border-radius:9px;border:1px solid var(--line);background:transparent;color:var(--muted);font-size:17px;line-height:1;cursor:pointer;flex:0 0 auto}
+
+/* compose (C) */
+.compose{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:20px 22px;display:flex;flex-direction:column;gap:16px}
+.vibe-row{display:flex;gap:10px;flex-wrap:wrap}
+.vibe-row input{flex:1 1 320px;height:56px;border-radius:14px;padding:0 18px;font-size:15px}
+.vibe-row .btn{height:56px;border-radius:14px}
+.picked{display:flex;gap:8px;flex-wrap:wrap;align-items:center;min-height:32px}
+.picked .lbl{font-size:12px;color:var(--faint);margin-right:4px;font-weight:600}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:6px 8px 6px 12px;border-radius:999px;background:var(--accent-soft);border:1px solid var(--accent-line);font-size:12px;font-weight:600;color:var(--text)}
+.pill button{background:none;border:none;color:var(--soft);font-size:14px;line-height:1;cursor:pointer;padding:0 2px}
+.tabs{display:flex;gap:22px;border-bottom:1px solid var(--line);overflow-x:auto}
+.tabs button{padding:10px 0;background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);font:600 14px var(--font);cursor:pointer;white-space:nowrap}
+.tabs button.on{border-color:var(--accent);color:var(--text);font-weight:700}
+.tabs .n{font-size:11px;color:var(--accent);margin-left:5px}
+.panelx{display:none}.panelx.on{display:block}
+.grp{margin-top:14px}.grp:first-child{margin-top:4px}
+.grp-label{font-size:11px;letter-spacing:1.3px;text-transform:uppercase;color:var(--faint);font-weight:700;margin-bottom:8px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{padding:8px 14px;border-radius:12px;border:1px solid var(--line2);background:transparent;color:#c9c6d2;font:500 13px var(--font);cursor:pointer;transition:all .12s}
+.chip:hover{border-color:#44444f;color:var(--text)}
+.chip.on{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:700}
+.free{margin-top:14px}
+
+/* forms */
+label{display:block;font-size:12px;color:var(--muted);margin:14px 0 6px;font-weight:600}
+input[type=text],input[type=password],textarea,select{width:100%;background:var(--input);color:var(--text);border:1px solid var(--line2);border-radius:12px;padding:11px 13px;font-size:14px;outline:none;transition:border-color .15s}
+input:focus,textarea:focus,select:focus{border-color:var(--accent)}
+input::placeholder,textarea::placeholder{color:var(--faint)}
+select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 18px) 50%,calc(100% - 13px) 50%;background-size:5px 5px;background-repeat:no-repeat;padding-right:34px}
+textarea{min-height:90px;resize:vertical;line-height:1.55}
+.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 18px}
+.check{display:flex;gap:10px;align-items:center;color:var(--soft);font-size:14px;margin-top:16px;font-weight:500}
+input[type=checkbox]{accent-color:var(--accent);width:18px;height:18px;margin:0}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.status{margin-top:12px;font-size:13px;color:var(--muted);white-space:pre-wrap}
+.status:empty{display:none}
+.status.err{color:var(--err)}
+.loading{display:flex;align-items:center;gap:10px}
+.loading::before{content:"";width:14px;height:14px;border-radius:50%;border:2px solid var(--line2);border-top-color:var(--accent);animation:spin .8s linear infinite;flex:0 0 auto}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* idea cards (A) */
+.filter{display:flex;gap:6px;border-bottom:1px solid var(--line);margin-bottom:20px}
+.filter button{padding:10px 14px;background:none;border:none;border-bottom:2px solid transparent;color:var(--muted);font:600 14px var(--font);cursor:pointer}
+.filter button.on{border-color:var(--accent);color:var(--text);font-weight:700}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:18px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:14px}
+.card-top{display:flex;justify-content:space-between;align-items:center;gap:10px;min-height:34px}
+.tagline-s{font-size:11px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:var(--accent)}
+.tagline-s.muted{color:var(--faint)}
+.card h2,.card h3{margin:0;font-size:22px;font-weight:800;letter-spacing:-.4px;line-height:1.2}
+.meta{margin-top:4px;font-size:13px;color:var(--muted);font-weight:600}
+.hook{margin:0;font-size:15px;line-height:1.55;color:var(--soft)}
+.box{background:var(--panel2);border-radius:12px;padding:14px;font-size:14px;line-height:1.5}
+.box b,.kv b{display:block;font-size:11px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.kv{font-size:14px;line-height:1.5;color:var(--soft);margin-top:10px}
+.more summary{color:var(--muted);font-size:13px;font-weight:600;cursor:pointer;list-style:none}
+.more summary::-webkit-details-marker{display:none}
+.more summary::before{content:"+ "}.more[open] summary::before{content:"– "}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{font-size:12px;border:1px solid var(--line2);border-radius:999px;padding:4px 10px;color:#b7b4c0}
+.card-actions{display:flex;gap:8px;margin-top:auto}
+.card-actions .btn{flex:1;padding:0 12px}
+.dismiss{border-top:1px solid var(--line);padding-top:14px}
+.dismiss .row{display:flex;gap:8px;margin-top:10px}
+.dismiss .row .btn{flex:1;height:42px}
+.small{font-size:12px;color:var(--muted)}
+.empty{color:var(--muted);text-align:center;padding:70px 20px;border:1px dashed var(--line2);border-radius:18px}
+.empty b{display:block;color:var(--text);font-size:18px;margin-bottom:4px}
+
+/* build */
+.build-top{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:18px;align-items:start}
+.opts{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:20px}
+.opts label:first-child{margin-top:0}
+.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px;margin-top:26px}
+.field-h{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px}
+.field-h span.t{font-size:11px;letter-spacing:1.3px;text-transform:uppercase;color:var(--muted);font-weight:800}
+.count{font-size:11px;color:var(--faint);margin-right:8px}.count.over{color:var(--err)}
+.copy{background:var(--panel2);border:1px solid var(--line2);color:var(--text);border-radius:9px;padding:6px 12px;font:600 12px var(--font);cursor:pointer}
+.out{min-height:520px;font-size:15px;line-height:1.6}
+.reply-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:18px;align-items:start}
+.reply-grid .panel{margin-bottom:16px}
+.log-item{border-top:1px solid var(--line);padding:10px 0;font-size:13px;line-height:1.5;color:var(--soft)}
+.log-item:first-child{border-top:none}
+.log-item b{display:block;font-size:11px;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
+.log-item.her b{color:var(--accent)}
+.log-item p{margin:0;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+@media (max-width:1100px){.reply-grid{grid-template-columns:1fr}.reply-main{order:-1}}
+.fb-row{display:flex;gap:8px;margin-top:8px}.fb-row .btn{flex:1;padding:0 10px}
+.build-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+
+/* lists */
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:20px;margin-bottom:16px}
+.eyebrow{font-size:11px;letter-spacing:1.3px;text-transform:uppercase;color:var(--muted);font-weight:800;margin-bottom:10px}
+.settings{max-width:760px}
+.dl{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--line)}
+.dl:first-child{border-top:none}
+.newtag{display:none}
+
+@media (max-width:1100px){
+  .build-top{grid-template-columns:1fr}
+  .fields{grid-template-columns:1fr}
+  .out{min-height:360px}
+}
+@media (max-width:860px){
+  .side{display:none}
+  .topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 16px 4px;position:sticky;top:0;z-index:5;background:rgba(11,11,13,.94);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+  .bottombar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:10;background:rgba(14,14,17,.96);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-top:1px solid var(--line);padding:6px 4px calc(6px + env(safe-area-inset-bottom))}
+  .bottombar button{flex:1;background:none;border:none;color:var(--faint);display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 2px;font:600 11px var(--font);position:relative}
+  .bottombar button.on{color:var(--text)}
+  .bottombar button.on svg{color:var(--accent)}
+  .bottombar svg{width:22px;height:22px}
+  .bottombar .badge{position:absolute;top:1px;left:calc(50% + 6px);background:var(--accent);color:var(--accent-ink);font-size:10px;border-radius:999px;padding:0 5px;line-height:16px;font-weight:800}
+  main{padding:10px 16px 110px}
+  h1{font-size:30px}
+  .compose{padding:16px;border-radius:18px}
+  .vibe-row .btn{flex:1}
+  .form-grid{grid-template-columns:1fr}
+  .grid{grid-template-columns:1fr}
+  .head .actions{width:100%}
+  .head .actions .btn{flex:1}
+}
+.btn.danger{color:#ff8a7e;border-color:#5a2a2a}
+.char-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px}
+.char-card{background:var(--panel);border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column}
+.char-pic{display:block;padding:0;border:none;background:var(--panel2);aspect-ratio:3/4;cursor:pointer;width:100%}
+.cimg{width:100%;height:100%;object-fit:cover;display:block}
+.noimg{display:grid;place-items:center;background:linear-gradient(160deg,#2a1520,#141418);color:var(--accent);font-weight:800}
+.cimg.noimg{font-size:48px;height:100%}
+.char-info{padding:14px 16px 0}.char-info h2{margin:0;font-size:19px;font-weight:800;letter-spacing:-.3px}
+.char-info p{margin:6px 0 0;font-size:13px;color:var(--soft);line-height:1.45;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.char-info .meta{font-size:12px;margin-top:8px}
+.char-card .card-actions{padding:14px 16px 16px;flex-wrap:wrap}.char-card .card-actions .btn{padding:0 10px}
+.ce-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);gap:18px;align-items:start}
+.ce-grid .panel{margin-bottom:16px}
+.ce-pic{aspect-ratio:3/4;border-radius:14px;background:var(--panel2);border:1px dashed var(--line2);display:grid;place-items:center;overflow:hidden;color:var(--faint);font-size:13px;max-width:320px}
+.ce-pic img{width:100%;height:100%;object-fit:cover}
+.chat-head{display:flex;align-items:center;gap:12px;padding:4px 0 14px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg);z-index:4}
+.chat-av{width:44px;height:44px;flex:0 0 44px}
+.hav{width:44px;height:44px;border-radius:12px;object-fit:cover}.hav.noimg{font-size:15px}
+.chat-title{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+.chat-title b{font-size:17px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chat-title select{padding:5px 30px 5px 10px;font-size:12px;border-radius:9px;max-width:320px}
+.chat-head .btn{height:40px;padding:0 14px}
+.chat-panel{margin-top:14px}
+.msgs{display:flex;flex-direction:column;gap:20px;padding:20px 0 12px;max-width:860px}
+.msg{display:flex;gap:12px;align-items:flex-start}
+.msg.her{flex-direction:row-reverse}
+.mav{width:40px;height:40px;border-radius:11px;object-fit:cover;flex:0 0 40px}.mav.noimg{font-size:14px}
+.mbody{flex:1;min-width:0;max-width:720px}
+.msg.her .mbody{background:var(--panel2);border:1px solid var(--line);border-radius:16px 4px 16px 16px;padding:12px 16px}
+.msg.him .mbody{background:var(--panel);border:1px solid var(--line);border-radius:4px 16px 16px 16px;padding:12px 16px}
+.mname{font-size:11px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.msg.him .mname{color:var(--accent)}
+.mtext{font-size:15.5px;line-height:1.65;color:var(--text)}
+.mtext p{margin:0 0 .8em}.mtext p:last-child{margin-bottom:0}
+.mtools{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px;align-items:center}
+.mtools button{background:none;border:1px solid transparent;color:var(--muted);font:600 12px var(--font);padding:5px 9px;border-radius:8px;cursor:pointer}
+.mtools button:hover{border-color:var(--line2);color:var(--text)}
+.alts{display:inline-flex;align-items:center;gap:2px;font-size:12px;color:var(--soft);margin-right:6px}
+.alts button{padding:3px 8px;font-size:15px}
+.mfb{margin-top:10px}.mfb textarea{min-height:70px}
+.medit{width:100%}
+.composer{position:sticky;bottom:0;background:linear-gradient(180deg,rgba(11,11,13,0),var(--bg) 18px);padding:18px 0 12px;max-width:860px;z-index:3}
+.composer textarea{min-height:90px;max-height:40vh}
+.comp-row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.comp-row .btn{flex:1 1 auto}
+#tab-chat .status{margin-top:8px}
+@media (max-width:1100px){.ce-grid{grid-template-columns:1fr}}
+@media (max-width:860px){.char-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.char-info h2{font-size:16px}.char-card .card-actions{flex-direction:column}.char-card .card-actions .btn{flex:none;height:40px}.chat-head{top:58px}
+  .composer{bottom:calc(62px + env(safe-area-inset-bottom))}.chat-head .btn{display:none}.msg.her .mbody,.msg.him .mbody{padding:10px 13px}.mav{display:none}}
+
+/* ===== Pulse theme ===== */
+body{background:var(--bg)}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(520px 420px at 8% -6%,rgba(168,85,247,.16),transparent 70%),radial-gradient(520px 420px at 105% 0%,rgba(255,79,139,.12),transparent 70%)}
+.app{position:relative;z-index:1}
+.logo .mark{background:var(--grad);color:#fff;border-radius:10px}
+.nav button.on{background:linear-gradient(90deg,rgba(255,79,139,.14),rgba(168,85,247,.10));color:var(--text)}
+.nav button.on svg{color:#ff7aa6}
+.nav .badge,.bottombar .badge{background:var(--grad);color:#fff}
+.btn{background:var(--grad);color:#fff;box-shadow:0 8px 24px rgba(168,85,247,.22)}
+.btn.light{background:var(--text);color:var(--bg);box-shadow:none}
+.btn.ghost,.btn.quiet{box-shadow:none}
+.btn.ghost{background:var(--panel2);border-color:var(--line2)}
+.chip.on{background:var(--grad);border-color:transparent;color:#fff}
+.tabs button.on,.filter button.on{border-image:var(--grad) 1;border-bottom-width:2px}
+.tabs .n{color:#d5b8ff}
+.pill{background:rgba(168,85,247,.14);border-color:rgba(198,165,255,.38)}
+.tagline-s{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.card,.panel,.compose,.opts{background:var(--panel);border-color:var(--line);border-radius:20px}
+input:focus,textarea:focus,select:focus{border-color:#b98cff}
+h1{letter-spacing:-1.2px}
+.sr{position:absolute;left:-9999px}
+@media (max-width:860px){
+  .bottombar{background:rgba(10,10,15,.95);border-top-color:#16161f}
+  .bottombar button.on{color:var(--text)}
+  .bottombar button.on::before{content:"";position:absolute;top:0;left:50%;transform:translateX(-50%);width:34px;height:3px;border-radius:2px;background:var(--grad)}
+  .bottombar button.on svg{color:#ff7aa6}
+  .topbar{background:rgba(7,7,11,.92)}
+}
+/* chats list */
+.sec-label{font-size:11px;letter-spacing:1.6px;color:var(--faint);font-weight:600;margin:6px 0 12px}
+.story-row{display:flex;gap:16px;overflow-x:auto;padding-bottom:6px;margin-bottom:26px;scrollbar-width:none}
+.story{display:flex;flex-direction:column;align-items:center;gap:7px;background:none;border:none;color:var(--soft);font:500 12px var(--font);cursor:pointer;flex:0 0 auto;width:70px}
+.story .ring{width:66px;height:66px;border-radius:50%;padding:2px;background:var(--grad)}
+.story .ring.dim{background:var(--line2)}
+.story .ring>*,.story .ring .sav{width:100%;height:100%;border-radius:50%;border:2.5px solid var(--bg);object-fit:cover;box-sizing:border-box;font-size:18px}
+.story .plus{width:66px;height:66px;border-radius:50%;border:1.5px dashed #34344a;display:grid;place-items:center;color:var(--muted);font-size:22px}
+.story span.nm{max-width:70px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.clist{display:flex;flex-direction:column;max-width:860px}
+.crow{display:grid;grid-template-columns:58px minmax(0,1fr) auto;gap:14px;align-items:center;padding:12px 4px;border-bottom:1px solid #14141c;background:none;border-left:none;border-right:none;border-top:none;color:var(--text);text-align:left;font-family:var(--font);cursor:pointer;width:100%}
+.crow:hover{background:rgba(255,255,255,.02)}
+.crow .av{width:58px;height:58px;border-radius:19px;object-fit:cover;font-size:18px}
+.crow b{font-size:15.5px;font-weight:600}.crow b small{font-size:11.5px;font-weight:400;color:#c6a5ff;margin-left:4px}
+.crow .prev{font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:3px}
+.crow .when{display:flex;flex-direction:column;align-items:flex-end;gap:6px;font-size:11.5px;color:var(--faint)}
+.viewall{display:flex;justify-content:space-between;align-items:center;margin:0 0 14px}
+.noimg{background:radial-gradient(80% 70% at 50% 30%,#3a2c4a,#121019);color:#e2c9ff}
+/* chat */
+.chat-head{background:rgba(7,7,11,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom-color:#16161f}
+.chat-av{width:46px;height:46px;flex:0 0 46px;border-radius:50%;padding:2px;background:var(--grad)}
+.chat-av>*{width:100%;height:100%;border-radius:50%;border:2px solid var(--bg);box-sizing:border-box;object-fit:cover}
+.hav.noimg{font-size:14px}
+.chat-title b{font-weight:600}
+#chatSub{font-size:12px;color:#c6a5ff}
+.msgs{gap:16px}
+.msg.him .mbody{background:#13131b;border:1px solid #1f1f2a;border-radius:6px 22px 22px 22px;padding:14px 17px}
+.msg.her .mbody{background:var(--grad);border:none;border-radius:22px 22px 6px 22px;padding:12px 16px;color:#fff}
+.msg.her{padding-left:12%}
+.msg.him{padding-right:6%}
+.msg.her .mname{display:none}
+.mname{color:#c6a5ff !important;letter-spacing:.4px;text-transform:none;font-weight:600;font-size:12.5px}
+.mtext{font-size:15px;line-height:1.65;color:#b9b6c9}
+.msg.her .mtext{color:rgba(255,255,255,.92)}
+.mtext b.dlg{color:#fff;font-weight:600}
+.mav{border-radius:50%}
+.tbar{display:inline-flex;align-items:center;gap:2px;margin-top:10px;padding:4px;border-radius:999px;background:#0e0e15;border:1px solid #1f1f2a}
+.msg.her .tbar{background:rgba(0,0,0,.18);border-color:rgba(255,255,255,.18)}
+.tbar button{width:36px;height:32px;border-radius:999px;border:none;background:transparent;color:var(--text);display:grid;place-items:center;cursor:pointer;font:600 12px var(--font)}
+.tbar button:hover{background:rgba(255,255,255,.07)}
+.tbar .alts{display:inline-flex;align-items:center;gap:0;padding:0 6px;font-size:12px;color:var(--soft)}
+.tbar .alts button{width:24px}
+.mmore{margin-top:8px;display:flex;flex-wrap:wrap;gap:6px}
+.mmore button{background:#0e0e15;border:1px solid #1f1f2a;color:var(--soft);border-radius:999px;padding:6px 12px;font:500 12px var(--font);cursor:pointer}
+.msg.her .mmore button{background:rgba(0,0,0,.2);border-color:rgba(255,255,255,.2);color:#fff}
+.dots{background:none;border:none;color:var(--faint);cursor:pointer;font-size:18px;line-height:1;padding:2px 6px;margin-top:6px}
+.msg.her .dots{color:rgba(255,255,255,.75)}
+.composer{background:linear-gradient(180deg,rgba(7,7,11,0),var(--bg) 22px)}
+.comp-chips{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.chipbtn{height:34px;padding:0 14px;border-radius:999px;border:1px solid #22222d;background:#101017;color:var(--text);font:500 12.5px var(--font);cursor:pointer}
+.chipbtn.magic{border-color:#2c2140;background:#150f22;color:#d2c6ff}
+.chipbtn:disabled{opacity:.45}
+.comp-pill{display:flex;align-items:flex-end;gap:10px;padding:7px 7px 7px 18px;border-radius:28px;background:#13131b;border:1px solid #22222d}
+.comp-pill textarea{flex:1;min-height:40px;max-height:38vh;border:none;background:transparent;padding:9px 0;resize:none;font-size:15px;line-height:1.45}
+.comp-pill textarea:focus{border:none}
+.sendbtn{width:42px;height:42px;flex:0 0 42px;border-radius:50%;border:none;background:var(--grad);color:#fff;display:grid;place-items:center;cursor:pointer;box-shadow:0 6px 18px rgba(168,85,247,.35)}
+.sendbtn:disabled{opacity:.45}
+@media (max-width:860px){.msg.her{padding-left:8%}.msg.him{padding-right:0}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="side">
+  <div class="logo"><div class="mark">OC</div><b>OC Studio</b></div>
+  <nav class="nav" aria-label="Main">
+    <button data-tab="create" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.8 4.6L18.5 9l-4.7 1.4L12 15l-1.8-4.6L5.5 9l4.7-1.4z"/></svg>Create</button>
+    <button data-tab="ideas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="13" height="16" rx="2"/><path d="M19 7v12a2 2 0 0 1-2 2H8"/></svg>Ideas<span class="badge" data-ideacount style="display:none"></span></button>
+    <button data-tab="build"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>Build</button>
+    <button data-tab="chars"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="3"/><circle cx="12" cy="10" r="3"/><path d="M7 18a5 5 0 0 1 10 0"/></svg>Characters</button>
+    <button data-tab="chats"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Chats</button>
+    <button data-tab="reply"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M8 9h8M8 13h5"/></svg>Reply</button>
+    <button data-tab="roster"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="7" r="4"/><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/></svg>Roster</button>
+  </nav>
+  <div class="side-foot">
+    <div class="model-card"><b id="modelName">deepseek-v4-flash</b><span id="modelMode">Stable mode</span></div>
+    <div class="nav"><button data-tab="settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg>Settings</button></div>
+  </div>
+</aside>
+
+<div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column">
+<div class="topbar">
+  <div class="logo" style="padding:0"><div class="mark">OC</div><b>OC Studio</b></div>
+  <button class="x" id="gearBtn" aria-label="Settings" style="width:42px;height:42px;display:grid;place-items:center"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg></button>
+</div>
+<main>
+
+<section id="tab-create" class="on">
+  <div class="head"><div><div class="kicker">Pick as much or as little as you like</div><h1>Create</h1></div></div>
+  <div class="compose">
+    <div class="vibe-row">
+      <input type="text" id="vibe" aria-label="Describe a vibe" placeholder="Describe a vibe… a Viking who lets a thief steal from him on purpose">
+      <button class="btn ghost" id="surpriseBtn">Surprise me</button>
+      <button class="btn" id="genBtn">Generate</button>
+    </div>
+    <div class="picked" id="picked"></div>
+    <div class="tabs" role="tablist">
+      <button data-ptab="genre" class="on">Genre<span class="n" id="n-genre"></span></button>
+      <button data-ptab="tropes">Tropes<span class="n" id="n-tropes"></span></button>
+      <button data-ptab="traits">Personality<span class="n" id="n-traits"></span></button>
+      <button data-ptab="details">Details</button>
+    </div>
+    <div class="panelx on" id="p-genre"><div id="genreChips"></div>
+      <div class="free"><input type="text" id="genreFree" placeholder="Or describe a setting: 1920s jazz club, Viking village…"></div></div>
+    <div class="panelx" id="p-tropes"><div id="dynChips"></div></div>
+    <div class="panelx" id="p-traits"><div id="traitChips"></div></div>
+    <div class="panelx" id="p-details">
+      <div class="form-grid">
+        <div><label>His archetype or job</label><input type="text" id="arch" placeholder="Bodyguard, mafia heir, vampire lord…"></div>
+        <div><label>Your character</label><input type="text" id="her" placeholder="Evelyn, a botanist who inherited a manor…"></div>
+        <div><label>Kinks to include</label><input type="text" id="kinks" placeholder="Praise, possessiveness… or leave blank"></div>
+        <div><label>Avoid</label><input type="text" id="avoid" placeholder="Royalty, werewolves, cheating…"></div>
+        <div><label>Heat level</label><select id="heat"><option value="explicit">Explicit</option><option value="sensual">Sensual</option><option value="fade">Fade to black</option></select></div>
+        <div><label>Ideas per batch</label><select id="count"><option>3</option><option>5</option></select></div>
+      </div>
+      <label class="check"><input type="checkbox" id="avoidRoster" checked> Nothing too close to my roster</label>
+    </div>
+    <div style="display:flex;justify-content:flex-end"><button class="link" id="clearPicks">Clear all picks</button></div>
+  </div>
+  <div class="status" id="ideaStatus"></div>
+</section>
+
+<section id="tab-ideas">
+  <div class="head">
+    <div><div class="kicker" id="ideasSub">Newest first</div><h1>Ideas</h1></div>
+    <div class="actions"><button class="btn quiet" id="clearIdeas">Clear all</button><button class="btn" id="genMore">Generate more</button></div>
+  </div>
+  <div class="filter" role="tablist"><button data-filter="all" class="on">All</button><button data-filter="new">New batch</button></div>
+  <div class="status" id="ideasTabStatus"></div>
+  <div id="ideaList"></div>
+</section>
+
+<section id="tab-build">
+  <div id="buildEmpty"><div class="head"><div><div class="kicker">Turn an idea into a Tipsy character</div><h1>Build</h1></div></div><div class="empty"><b>Nothing on the table yet</b>Open Ideas and tap Build on one you like.</div></div>
+  <div id="buildArea" style="display:none">
+    <div class="head"><div><div class="kicker">Turn an idea into a Tipsy character</div><h1>Build</h1></div>
+      <div class="actions"><button class="btn light" id="saveBuild">Save</button></div></div>
+    <div class="build-top">
+      <div class="card" id="buildIdea"></div>
+      <div class="opts">
+        <div class="form-grid">
+          <div><label>Background length</label><select id="bgLen"><option value="2500">Standard</option><option value="4000" selected>Long</option><option value="6000">Very long</option></select></div>
+          <div><label>Opening length</label><select id="openLen"><option value="700">Short</option><option value="1300" selected>Medium</option><option value="2200">Long</option></select></div>
+        </div>
+        <label>Opening ends</label>
+        <select id="openEnd"><option value="meet">At the meeting, on his first line to her</option><option value="before">Just before they meet</option></select>
+        <button class="btn wide" id="buildBtn" style="margin-top:18px">Build character</button>
+        <button class="btn quiet wide" id="stopBtn" style="display:none;margin-top:10px">Stop</button>
+        <div class="status" id="buildStatus"></div>
+      </div>
+    </div>
+    <div class="fields">
+      <div><div class="field-h"><span class="t">Name</span><span><span class="count" id="c-name"></span><button class="copy" data-copy="name">Copy</button></span></div><input type="text" id="f-name"></div>
+      <div><div class="field-h"><span class="t">Description</span><span><span class="count" id="c-tagline"></span><button class="copy" data-copy="tagline">Copy</button></span></div><textarea id="f-tagline" style="min-height:46px;height:46px"></textarea></div>
+      <div><div class="field-h"><span class="t">Background</span><span><span class="count" id="c-background"></span><button class="copy" data-copy="background">Copy</button></span></div><textarea id="f-background" class="out"></textarea>
+        <div class="fbx">
+          <label for="fb-background" style="margin-top:12px">Change something</label>
+          <textarea id="fb-background" style="min-height:70px" placeholder="e.g. Redo his appearance: clean-shaven, lean and tall, no beer belly. Keep everything else."></textarea>
+          <div class="fb-row"><button class="btn" data-revise="background">Apply changes</button><button class="btn quiet" id="reBg">Rewrite from scratch</button></div>
+          <button class="link" data-undo="background" style="display:none">Undo last change</button>
+        </div></div>
+      <div><div class="field-h"><span class="t">Opening</span><span><span class="count" id="c-opening"></span><button class="copy" data-copy="opening">Copy</button></span></div><textarea id="f-opening" class="out"></textarea>
+        <div class="fbx">
+          <label for="fb-opening" style="margin-top:12px">Change something</label>
+          <textarea id="fb-opening" style="min-height:70px" placeholder="e.g. Make him less talkative, and end it in the rain. Keep everything else."></textarea>
+          <div class="fb-row"><button class="btn" data-revise="opening">Apply changes</button><button class="btn quiet" id="reOpen">Rewrite from scratch</button></div>
+          <button class="link" data-undo="opening" style="display:none">Undo last change</button>
+        </div></div>
+    </div>
+  </div>
+</section>
+
+<section id="tab-chars">
+  <div class="head"><div><div class="kicker" id="charsKicker">Your characters</div><h1 id="charsTitle">Chats</h1></div>
+    <div class="actions"><button class="btn quiet" id="replyLink">Tipsy reply helper</button><button class="btn" id="newChar">New character</button></div></div>
+  <div id="charList"></div>
+</section>
+
+<section id="tab-charedit">
+  <div class="head"><div><div class="kicker">Picture, character sheet and opening</div><h1 id="ceTitle">New character</h1></div>
+    <div class="actions"><button class="btn quiet" id="ceCancel">Cancel</button><button class="btn light" id="ceSave">Save</button></div></div>
+  <div class="ce-grid">
+    <div>
+      <div class="panel">
+        <div class="eyebrow">Picture</div>
+        <div class="ce-pic" id="cePic"><span>No picture yet</span></div>
+        <div class="fb-row" style="margin-top:12px">
+          <label class="btn ghost" for="ceFile" style="display:flex;align-items:center;justify-content:center;margin:0">Choose picture</label>
+          <button class="btn quiet" id="ceNoPic">Remove</button>
+        </div>
+        <input type="file" id="ceFile" accept="image/*" style="display:none">
+      </div>
+      <div class="panel">
+        <label for="ceName" style="margin-top:0">Name</label>
+        <input type="text" id="ceName" placeholder="His name">
+        <label for="ceTag">Tagline</label>
+        <textarea id="ceTag" style="min-height:70px" placeholder="One line for his card"></textarea>
+        <label for="ceHer">Your character in his story</label>
+        <textarea id="ceHer" style="min-height:120px" placeholder="Name, age, looks, personality… Used when he replies and when you tap Write for me."></textarea>
+      </div>
+    </div>
+    <div>
+      <div class="panel">
+        <div class="eyebrow">Paste the whole Google Doc (optional)</div>
+        <p class="small" style="margin-top:0">Open his doc, select all, copy, and paste it here. The app splits it at the “Intro Scene” heading into Background and Opening.</p>
+        <textarea id="ceDoc" style="min-height:110px" placeholder="Paste the full doc here…"></textarea>
+        <button class="btn ghost wide" id="ceSplit" style="margin-top:10px">Split into Background and Opening</button>
+        <div class="status" id="ceStatus"></div>
+      </div>
+      <div class="panel">
+        <div class="field-h"><span class="t">Background (his character sheet)</span><span class="count" id="ceBgCount"></span></div>
+        <textarea id="ceBg" class="out" style="min-height:320px"></textarea>
+        <div class="field-h" style="margin-top:16px"><span class="t">Opening (his first message)</span><span class="count" id="ceOpCount"></span></div>
+        <textarea id="ceOp" class="out" style="min-height:240px"></textarea>
+      </div>
+      <div class="actions" style="justify-content:space-between">
+        <button class="btn quiet" id="ceToBuild">Open in Build</button>
+        <button class="btn quiet danger" id="ceDelete">Delete character</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="tab-chat">
+  <div class="chat-head">
+    <button class="x" id="chatBack" aria-label="Back to characters">‹</button>
+    <div class="chat-av" id="chatAv"></div>
+    <div class="chat-title"><b id="chatName"></b><span id="chatSub"></span></div>
+    <button class="x" id="chatNew" aria-label="New chat from the opening" title="New chat from the opening"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg></button>
+    <button class="x" id="chatOpts" aria-label="Chat settings"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+  </div>
+  <div class="panel chat-panel" id="chatPanel" style="display:none">
+    <label for="chatSel" style="margin-top:0">Conversation</label>
+    <select id="chatSel"></select>
+    <div class="form-grid" style="margin-top:6px">
+      <div><label style="margin-top:0">His reply length</label><select id="chatLen"><option value="150">Short</option><option value="300">Medium</option><option value="550">Long</option><option value="900">Very long</option></select></div>
+      <div><label style="margin-top:0">Your replies (Write for me)</label><select id="chatPov"><option value="third">Third person (she…)</option><option value="first">First person (I…)</option></select></div>
+    </div>
+    <label for="chatHer">Your character in his story</label>
+    <textarea id="chatHer" style="min-height:100px" placeholder="Name, age, looks, personality…"></textarea>
+    <div class="actions" style="margin-top:12px"><button class="btn ghost" id="chatNew2">New chat</button><button class="btn quiet" id="chatEditChar">Edit character</button><button class="btn quiet danger" id="chatDel">Delete this chat</button></div>
+  </div>
+  <div id="msgs" class="msgs"></div>
+  <div class="composer">
+    <div class="comp-chips">
+      <button class="chipbtn magic" id="chatWrite">✦ Write for me</button>
+      <button class="chipbtn" id="chatCont">He continues</button>
+      <button class="chipbtn" id="chatStop" style="display:none">Stop</button>
+    </div>
+    <div class="comp-pill">
+      <label for="chatIn" class="sr">Your message</label>
+      <textarea id="chatIn" rows="1" placeholder="Her move…"></textarea>
+      <button class="sendbtn" id="chatSend" aria-label="Send"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="M5 12l7-7 7 7"/></svg></button>
+    </div>
+    <div class="status" id="chatStatus"></div>
+  </div>
+</section>
+
+
+<section id="tab-reply">
+  <div class="head"><div><div class="kicker">Paste his message from Tipsy and get your character's response</div><h1>Reply</h1></div>
+    <div class="actions"><button class="btn quiet" id="clearScene">Clear scene</button></div></div>
+  <div class="reply-grid">
+    <div class="reply-side">
+      <div class="panel">
+        <div class="eyebrow">Who you're talking to</div>
+        <select id="replyChar" aria-label="Character"></select>
+        <p class="small" id="replyCharNote" style="margin-bottom:0"></p>
+      </div>
+      <div class="panel">
+        <div class="eyebrow">Your character</div>
+        <textarea id="herProfile" style="min-height:150px" placeholder="Name, age, looks, personality, how she talks, what she wants… The more you add, the more she sounds like her. Saved per character."></textarea>
+        <div class="form-grid">
+          <div><label>Point of view</label><select id="replyPov"><option value="third">Third person (she…)</option><option value="first">First person (I…)</option></select></div>
+          <div><label>Length</label><select id="replyLen"><option value="150">Short</option><option value="300" selected>Medium</option><option value="550">Long</option></select></div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="eyebrow">Scene so far</div>
+        <p class="small" style="margin-top:0">Each exchange is added here automatically and sent as context, so replies stay consistent.</p>
+        <div id="sceneLog"></div>
+      </div>
+    </div>
+    <div class="reply-main">
+      <div class="panel">
+        <label for="hisMsg" style="margin-top:0">His message (paste from Tipsy)</label>
+        <textarea id="hisMsg" style="min-height:200px" placeholder="Paste his latest reply here…"></textarea>
+        <label for="herDir">How should she respond? (optional)</label>
+        <textarea id="herDir" style="min-height:90px" placeholder="e.g. She doesn't back down, teases him, and asks about the scar. Leave blank and she'll respond in character."></textarea>
+        <button class="btn wide" id="replyBtn" style="margin-top:16px">Write her response</button>
+        <button class="btn quiet wide" id="replyStop" style="display:none;margin-top:10px">Stop</button>
+        <div class="status" id="replyStatus"></div>
+      </div>
+      <div class="panel">
+        <div class="field-h"><span class="t">Her response</span><span><span class="count" id="c-reply"></span><button class="copy" id="copyReply">Copy</button></span></div>
+        <textarea id="herOut" class="out" style="min-height:300px"></textarea>
+        <label for="fb-reply">Change something</label>
+        <textarea id="fb-reply" style="min-height:64px" placeholder="e.g. Make her flirtier and cut the last paragraph."></textarea>
+        <div class="fb-row"><button class="btn" id="reviseReply">Apply changes</button><button class="btn quiet" id="redoReply">Write another version</button></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="tab-roster">
+  <div class="head"><div><div class="kicker">Your existing characters. New ideas steer away from these and copy your style</div><h1>Roster</h1></div>
+    <div class="actions"><button class="btn ghost" id="addChar">Add a character</button></div></div>
+  <div id="rosterList"></div>
+</section>
+
+<section id="tab-settings">
+  <div class="head"><div><div class="kicker">Key, model and backups</div><h1>Settings</h1></div></div>
+  <div class="settings">
+  <div class="panel">
+    <div class="eyebrow">DeepSeek</div>
+    <label style="margin-top:0">API key</label>
+    <div style="display:flex;gap:8px"><input type="password" id="apiKey" placeholder="sk-…"><button class="copy" id="showKey">Show</button></div>
+    <p class="small">Stored only in this browser on this device.</p>
+    <div class="form-grid">
+      <div><label>Model</label><select id="model"><option value="deepseek-v4-flash">deepseek-v4-flash · cheaper</option><option value="deepseek-v4-pro">deepseek-v4-pro · stronger writing</option></select></div>
+      <div><label>Writing mode</label><select id="mode"><option value="stable">Stable · plans first (recommended)</option><option value="fast">Fast · can drift</option></select></div>
+    </div>
+    <div id="tempWrap"><label>Creativity <span id="tempVal"></span></label><input type="range" id="temp" min="0.3" max="1" step="0.1"><p class="small">Fast mode only. Long text is capped at 0.7.</p></div>
+  </div>
+  <div class="panel">
+    <div class="eyebrow">Instructions sent to DeepSeek</div>
+    <p class="small" style="margin-top:0">Everything the app tells DeepSeek before each request. Edit freely; changes save when you leave the box. Reset puts back the original.</p>
+    <div class="field-h" style="margin-top:12px"><span class="t">Rules for creating characters</span><button class="copy" data-preset="base">Reset</button></div>
+    <textarea id="pr-base" data-prompt="base" style="min-height:260px;font-size:13px"></textarea>
+    <div class="field-h" style="margin-top:16px"><span class="t">House style</span><button class="copy" data-preset="style">Reset</button></div>
+    <textarea id="pr-style" data-prompt="style" style="min-height:200px;font-size:13px"></textarea>
+    <div class="field-h" style="margin-top:16px"><span class="t">Rules for writing her replies</span><button class="copy" data-preset="reply">Reset</button></div>
+    <textarea id="pr-reply" data-prompt="reply" style="min-height:220px;font-size:13px"></textarea>
+    <div class="field-h" style="margin-top:16px"><span class="t">Rules for him in Chat</span><button class="copy" data-preset="char">Reset</button></div>
+    <p class="small" style="margin-top:0">{{name}} becomes his name and {{length}} the reply length. His full background is added after these rules.</p>
+    <textarea id="pr-char" data-prompt="char" style="min-height:260px;font-size:13px"></textarea>
+    <label class="check"><input type="checkbox" id="chatQuote"> In Chat, run the dialogue-quotes check after each message (slower, uses a little more credit)</label>
+  </div>
+  <div class="panel">
+    <div class="eyebrow">Things you've turned down</div>
+    <p class="small" style="margin-top:0">New ideas steer away from these. Remove any you've changed your mind about.</p>
+    <div id="dislikeList"></div>
+  </div>
+  <div class="panel">
+    <div class="eyebrow">Backup</div>
+    <div class="actions"><button class="btn ghost" id="exportBtn">Back up everything</button><button class="btn ghost" id="importBtn">Restore backup or add characters</button></div>
+    <input type="file" id="importFile" accept=".json,application/json" style="display:none">
+  </div>
+  <div class="status" id="setStatus"></div>
+  </div>
+</section>
+
+</main>
+</div>
+</div>
+<nav class="bottombar" aria-label="Main">
+  <button data-tab="create" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.8 4.6L18.5 9l-4.7 1.4L12 15l-1.8-4.6L5.5 9l4.7-1.4z"/></svg>Create</button>
+  <button data-tab="ideas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="13" height="16" rx="2"/><path d="M19 7v12a2 2 0 0 1-2 2H8"/></svg>Ideas<span class="badge" data-ideacount style="display:none"></span></button>
+  <button data-tab="build"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>Build</button>
+  <button data-tab="chars"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="3"/><circle cx="12" cy="10" r="3"/><path d="M7 18a5 5 0 0 1 10 0"/></svg>Characters</button>
+  <button data-tab="chats"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Chats</button>
+  <button data-tab="roster"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="7" r="4"/><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/></svg>Roster</button>
+</nav>
+<script>
+const API_URL='https://api.deepseek.com/chat/completions';
+const STORE='ocgen_v1';
+const LIMITS={name:50,tagline:100000,background:1000000,opening:20000};
+const GENRES={
+ 'Romance flavour':['Dark romance','Gothic romance','Romantic suspense','Romcom','Erotic romance','Psychological thriller','Angst','Cozy / comfort'],
+ 'Fantasy':['High fantasy','Fantasy court','Fae / faerie','Dragons','Witches & magic','Magic academy','Dark fantasy','Gods & mythology','Fairy tale retelling','Romantasy war'],
+ 'Paranormal':['Vampires','Werewolves / shifters','Demons','Angels','Ghosts / haunting','Monster romance','Mermaids / sirens','Reapers / death'],
+ 'Historical':['Regency','Victorian','Medieval','Vikings','Ancient Rome / Greece','Wild West','1920s / Jazz Age','Pirates / sea','Highlands / clans','Edwardian','1950s'],
+ 'Contemporary':['Small town','Big city','Mafia / crime','Billionaire / CEO','Sports','Rockstar / celebrity','College / campus','Military','Workplace','Hospital / medical','Cowboy / ranch','Dark academia','Royalty (modern)','Holiday / Christmas'],
+ 'Speculative':['Sci-fi','Space opera','Alien','Dystopian','Post-apocalyptic','Cyberpunk','Steampunk','Time travel'],
+ 'Horror & crime':['Horror','Cult','Stalker thriller','Murder mystery','Heist','Assassins','Serial killer (dark)']
+};
+const DYNAMICS={
+ 'Relationship arcs':['Slow burn','Instalove','Enemies to lovers','Rivals to lovers','Friends to lovers','Strangers to lovers','Second chance','Hate to love','Opposites attract','Grumpy / sunshine','Sunshine / grumpy (she is grumpy)'],
+ 'Situations':['Fake dating','Marriage of convenience','Arranged marriage','Forced proximity','Only one bed','Stuck together','Road trip','Snowed in','Secret relationship','Workplace romance','Bodyguard','Captive / captor (dark)','Kidnapped (dark)','Revenge plot','Undercover','Contract / deal'],
+ 'Forbidden & taboo':['Forbidden love','Age gap','Boss / employee','Brother\'s best friend','Best friend\'s brother','Dad\'s friend','Off-limits','Royal / commoner','Priest / religious','Different sides of a war'],
+ 'Fate & identity':['Fated mates','Soulmates','Reincarnation','Amnesia','Secret identity','Mistaken identity','Hidden royalty','Chosen one','Curse to break'],
+ 'His devotion':['Who did this to you','Touch her and die','He falls first','Obsessive love','Protector','Pining','Yearning','Possessive','Morally grey','Villain gets the girl','Redemption arc','Reformed playboy','Only soft for her','Love triangle']
+};
+const TRAITS={
+ 'Light':['Charming flirt','Golden retriever','Cinnamon roll','Gentleman','Silver-tongued rogue','Playful tease','Himbo','Sweet & shy','Nerdy','Romantic poet'],
+ 'Dark':['Cold & aloof','Brooding','Ruthless','Villain','Yandere','Manipulative','Dangerous calm','Cruel to everyone but her','Psychopath (dark)'],
+ 'In between':['Gentle giant','Stoic','Sarcastic','Grumpy','Tortured artist','Dominant','Soft dom','Daddy dom','Protective','Possessive','Jealous','Tsundere','Mysterious','Golden boy with a dark side','Broken & healing','Workaholic','Old soul','Wild & reckless']
+};
+
+const DEFAULT_ROSTER=[];
+
+const SYSTEM_BASE=`You are a character designer and novelist creating original male characters for one writer's private, uncensored adult (18+) roleplay on the Tipsy app. In Tipsy, an AI plays the male character and the writer plays the female lead opposite him.
+
+This is an adult NSFW creative project. Sexual content, kinks, power dynamics and dark themes are welcome and expected whenever the writer's picks call for them. Follow her picks exactly and fully, including dynamics such as daddy dom, praise, degradation, possessiveness, obsession, captive or villain romance. When the heat level is Explicit, write sexual content explicitly and in detail. Never soften, censor, fade to black, moralise, add disclaimers or warnings, or quietly drop or water down a kink, dynamic or trope she asked for.
+
+Hard rules (the only limits):
+- Every character, including the writer's, is an adult aged 18 or older and written as an adult. No age-regression or childlike roleplay in sexual content. Adult power dynamics, a "Daddy" title, caretaker dominance and praise between adults are all fine.
+- The male character is the only character the AI controls. Never decide the writer's character's actions, dialogue, thoughts, feelings, backstory or secrets.
+- Never use asterisks. No markdown. Narration in plain novel-style prose.
+- DIALOGUE RULE: every word any character says out loud goes inside double quotation marks, every time, including a line that follows "he said" or "he spoke". Never write speech without quotes, and never mark speech with dashes, colons, italics or a new unquoted paragraph.
+    Right: He looked up from the engine. "You're early."
+    Right: He spoke quietly. "Stay behind me."
+    Wrong: He spoke quietly. Stay behind me.
+    Wrong: He said: Stay behind me.
+- Original characters only: no existing franchises, no real people.`;
+
+const STYLE_NOTES=`The writer's house style (follow it, don't copy her plots):
+- Dark romance with an intense, devoted male lead whose love grows obsessive or possessive, told through his own internal logic.
+- Slow burn above all: the spark is instant but subtle, and devotion is earned in stages. Endearments, confessions and touch are gated by stage.
+- A sharp split between his public face and private self (warm to others and cold to her, gentle exterior and feral instinct, calm priest and repressed yearning, steady captain and confused heart).
+- A lived-in setting: named places and rooms, weather, history, and a small named supporting cast who notice things.
+- Sensory signatures: a scent, a recurring object (a ring, a sash, a rosary), a habit with his hands.
+- Openings are from his point of view, in the middle of his ordinary life, just before she disrupts it.
+- He wants her with total intensity. Consent dynamics follow the writer's picks: by default he wants her to choose him, but darker picks are written the way she asks, without softening.
+- Character sheets include explicit DO / DO NOT rules for the AI, speech samples and a staged relationship arc.
+When the writer picks a different genre, trope or personality (a romcom, a charming flirt, a golden retriever), follow her picks over the dark-romance default and keep the craft: slow burn, rich setting, sensory detail, a named cast, staged arc.`;
+
+const state={
+  settings:{apiKey:'',model:'deepseek-v4-flash',temp:0.8,mode:'stable'},
+  roster:JSON.parse(JSON.stringify(DEFAULT_ROSTER)),
+  ideas:[],saved:[],build:null,dislikes:[],chats:{},replyChar:'',
+  inputs:{vibe:'',genres:[],dyn:[],traits:[],kinks:'',genreFree:'',arch:'',her:'',heat:'explicit',avoid:'',n:3,avoidRoster:true}
+};
+let busy=false,controller=null,ideaFilter='all';
+
+const $=s=>document.querySelector(s);
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7);}
+const KEYS=['settings','roster','ideas','saved','build','inputs','dislikes','chats','replyChar','characters'];
+let idb=null,saveTimer=null;
+function idbOpen(){return new Promise(r=>{try{const q=indexedDB.open('ocstudio',1);q.onupgradeneeded=()=>q.result.createObjectStore('kv');q.onsuccess=()=>r(q.result);q.onerror=()=>r(null);}catch(e){r(null);}});}
+function idbGet(k){return new Promise(r=>{try{const q=idb.transaction('kv').objectStore('kv').get(k);q.onsuccess=()=>r(q.result);q.onerror=()=>r(null);}catch(e){r(null);}});}
+function idbPut(k,v){return new Promise(r=>{try{const t=idb.transaction('kv','readwrite');t.objectStore('kv').put(v,k);t.oncomplete=()=>r(true);t.onerror=()=>r(false);}catch(e){r(false);}});}
+function apply(s){if(s)for(const k of KEYS){if(s[k]!=null)state[k]=s[k];}}
+async function load(){
+  idb=await idbOpen();let s=null;
+  if(idb){const v=await idbGet('state');if(v)try{s=JSON.parse(v);}catch(e){}}
+  if(!s){try{s=JSON.parse(localStorage.getItem(STORE)||'null');}catch(e){}}
+  apply(s);
+  try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist();}catch(e){}
+}
+async function flush(){clearTimeout(saveTimer);saveTimer=null;const j=JSON.stringify(state);
+  let ok=false;if(idb)ok=await idbPut('state',j);
+  if(ok){try{localStorage.removeItem(STORE);}catch(e){}}else{try{localStorage.setItem(STORE,j);}catch(e){}}}
+function persist(){clearTimeout(saveTimer);saveTimer=setTimeout(flush,250);}
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'&&saveTimer)flush();});
+window.addEventListener('pagehide',()=>{if(saveTimer)flush();});
+function clean(s){return String(s||'').replace(/\*+/g,'').replace(/^#{1,6}\s*/gm,'').replace(/^```\w*\s*$/gm,'').trim();}
+
+/* ---------- API ---------- */
+async function callAPI(messages,opts={}){
+  const key=(state.settings.apiKey||'').trim();
+  if(!key)throw new Error('Add your DeepSeek API key in Settings first.');
+  const stable=state.settings.mode!=='fast';
+  const body={model:state.settings.model||'deepseek-v4-flash',messages,stream:!!opts.onToken};
+  if(stable){
+    body.thinking={type:'enabled'};body.reasoning_effort='low';
+    body.max_tokens=(opts.maxTokens||8000)+12000;
+  }else{
+    const base=Math.min(Number(state.settings.temp)||0.8,1);
+    body.thinking={type:'disabled'};body.temperature=opts.longForm?Math.min(base,0.7):base;body.top_p=0.9;
+    body.max_tokens=opts.maxTokens||8000;
+  }
+  controller=new AbortController();
+  let res;
+  try{res=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},body:JSON.stringify(body),signal:controller.signal});}
+  catch(e){if(e.name==='AbortError')throw e;throw new Error('Could not reach DeepSeek. Check your connection and try again. If it keeps failing, the browser may be blocking the request.');}
+  if(!res.ok){let t='';try{t=await res.text();}catch(e){}
+    const map={401:'DeepSeek rejected the API key. Check it in Settings.',402:'Your DeepSeek balance has run out. Top up at platform.deepseek.com.',429:'Too many requests. Wait a moment and try again.',503:'DeepSeek is busy right now. Try again in a minute.'};
+    throw new Error(map[res.status]||('DeepSeek error '+res.status+': '+t.slice(0,300)));}
+  if(!opts.onToken){const j=await res.json();const ch=j.choices&&j.choices[0]||{};
+    const content=(ch.message&&ch.message.content)||'';
+    if(ch.finish_reason==='length'&&!content.trim())throw new Error('DeepSeek ran out of room before finishing. Try again, or ask for 3 ideas instead of 5.');
+    return content;}
+  const reader=res.body.getReader(),dec=new TextDecoder();let buf='',out='',thinking=false;
+  while(true){const r=await reader.read();if(r.done)break;buf+=dec.decode(r.value,{stream:true});let i;
+    while((i=buf.indexOf('\n'))>=0){const line=buf.slice(0,i).trim();buf=buf.slice(i+1);
+      if(!line.startsWith('data:'))continue;const d=line.slice(5).trim();if(d==='[DONE]')continue;
+      try{const j=JSON.parse(d);const delta=j.choices&&j.choices[0]&&j.choices[0].delta||{};
+        if(delta.reasoning_content&&!out&&!thinking){thinking=true;if(opts.onThink)opts.onThink();}
+        if(delta.content){out+=delta.content;opts.onToken(out);}}catch(e){}}}
+  return out;
+}
+
+/* ---------- prompt helpers ---------- */
+function rosterBlock(){return state.roster.map(c=>'- '+c.name+': '+c.summary).join('\n');}
+function styleBlock(){return state.roster.filter(c=>c.style&&c.style.trim()).map(c=>'--- From '+c.name+"'s opening ---\n"+c.style.trim()).join('\n\n');}
+function ideaText(i){return ['Title: '+i.title,'Name: '+i.name+(i.age?', '+i.age:''),'Role: '+i.role,'Personality: '+(i.personality||''),'Setting: '+i.setting,'Her role: '+i.her_role,'Dynamic: '+i.dynamic,'Hook: '+i.hook,'His wound: '+i.his_wound,'Arc: '+i.arc,'How they meet: '+(i.how_they_meet||i.opening_situation||''),'Tags: '+(i.tags||[]).join(', ')].join('\n');}
+function herLine(){const h=(state.inputs.her||'').trim();return h?"The writer's character: "+h+". Use only what is stated; decide nothing else about her.":"The writer's character is defined only by her role in the idea. Leave her personality and past open.";}
+const HEAT={explicit:'Explicit',sensual:'Sensual, not graphic',fade:'Fade to black'};
+const HEAT_RULE={
+  explicit:'Write his desires, kinks and intimate behaviour fully and explicitly, as the writer does in her own sheets, with how he handles consent made clear.',
+  sensual:'Describe his attraction, what undoes him and how he behaves in intimate moments. Sensual, not graphic.',
+  fade:'Keep intimacy romantic and non-explicit. Sexual scenes fade to black.'};
+function dislikeBlock(){const d=(state.dislikes||[]).slice(-20);if(!d.length)return '';return "\n\nIdeas the writer turned down. Avoid what she disliked about them:\n"+d.map(x=>'- '+x.title+' ('+x.summary+'): '+(x.note||'not a fit for her')).join('\n');}
+const PROMPT_DEFAULTS={};
+function P(k){const v=state.settings.prompts&&state.settings.prompts[k];return (v&&v.trim())?v:PROMPT_DEFAULTS[k];}
+function sys(){return P('base')+'\n\n'+P('style')+"\n\nThe writer's existing roster:\n"+rosterBlock()+dislikeBlock();}
+
+/* ---------- ideas ---------- */
+function readInputs(){const I=state.inputs;I.vibe=$('#vibe').value;I.genreFree=$('#genreFree').value;I.arch=$('#arch').value;I.her=$('#her').value;I.heat=$('#heat').value;I.avoid=$('#avoid').value;I.kinks=$('#kinks').value;I.n=Number($('#count').value);I.avoidRoster=$('#avoidRoster').checked;persist();}
+async function genIdeas(seed){
+  if(busy)return;readInputs();const I=state.inputs;
+  const genres=[...I.genres,I.genreFree].filter(Boolean).join('; ')||'your choice';
+  const prompt=`Generate ${I.n} new, original male character ideas for this writer.
+
+Preferences for this batch:
+- The vibe she wants: ${I.vibe||'none given'}
+- Genre / setting: ${genres}
+- His archetype: ${I.arch||'your choice'}
+- Tropes / dynamic: ${I.dyn.join(', ')||'your choice'}
+- His personality: ${I.traits.join(', ')||'your choice'}
+- ${herLine()}
+- Heat level: ${HEAT[I.heat]}
+- Avoid: ${I.avoid||'nothing specific'}
+${I.avoidRoster?"- Do not reuse the roster's settings, professions or core premises. Each idea must feel new next to them.":''}
+${seed?'Make these variations on the idea below: keep its core appeal but change the setting, his profession or the twist.\n'+ideaText(seed):''}
+
+Each idea must be clearly different from the others, including a different way of meeting. Make the meetings specific and surprising in what happens, but describe them simply. Every character is an adult.
+
+Write each idea in exactly this format, with every label in capitals at the start of its own line, and a line containing only === between ideas. No JSON, no markdown, no numbering, nothing before the first idea.
+
+TITLE: 2-5 words
+NAME: his full name
+AGE: a number
+ROLE: his job or position in 2-5 words (for example "Viking jarl", "Lighthouse keeper", "Mafia accountant")
+PERSONALITY: one short sentence
+SETTING: one short sentence: where and when
+HER ROLE: one short sentence: who she is in this story, without deciding her personality
+DYNAMIC: the main tropes, as a short comma-separated list
+HOOK: 1-2 short sentences that explain the concept: who he is, who she is, and what pulls them together or keeps them apart
+HIS WOUND: one short sentence
+ARC: one sentence with 3 steps, like "Enemies, then reluctant allies, then lovers"
+HOW THEY MEET: 1-2 short sentences saying plainly what happens when they first meet
+TAGS: 4-6 short tags, separated by commas
+
+HOW TO WRITE THE IDEAS: this is a quick pitch, not the story itself. Write in plain, simple, everyday English, as if explaining the idea to a friend in a text message. Short, clear sentences. No poetic or literary language, no metaphors, no atmospheric description, no clever phrasing. Someone should understand the whole concept in ten seconds. Be specific and surprising in the IDEA, not in the wording.
+===`;
+  setBusy(true);const where=$('#tab-ideas').classList.contains('on')?'#ideasTabStatus':'#ideaStatus';status(where,'Thinking up ideas…',false,true);
+  try{
+    const txt=await callAPI([{role:'system',content:sys()},{role:'user',content:prompt}],{maxTokens:8000});
+    if(!txt.trim())throw new Error('DeepSeek sent back an empty reply. Tap Generate again.');
+    const list=parseIdeas(txt).map(x=>Object.assign({id:uid()},x));
+    if(!list.length)throw new Error('DeepSeek replied in a format the app could not read. Tap Generate again.');
+    state.ideas.forEach(x=>delete x.isNew);list.forEach(x=>x.isNew=true);state.ideas=list.concat(state.ideas);persist();renderIdeas();status(where,'');showTab('ideas');
+  }catch(e){if(e.name!=='AbortError')status(where,e.message,true);else status(where,'Stopped.');}
+  setBusy(false);
+}
+const IDEA_KEYS={'TITLE':'title','NAME':'name','AGE':'age','ROLE':'role','PERSONALITY':'personality','SETTING':'setting','HER ROLE':'her_role','DYNAMIC':'dynamic','HOOK':'hook','HIS WOUND':'his_wound','ARC':'arc','HOW THEY MEET':'how_they_meet','TAGS':'tags'};
+function parseIdeas(txt){
+  const keyRe=new RegExp('^\\s*(?:[-*#\\d.)\\s]*)\\**\\s*('+Object.keys(IDEA_KEYS).join('|')+')\\s*\\**\\s*[:\\-–]\\s*\\**\\s*(.*)$','i');
+  const out=[];let cur=null,last=null;
+  for(const raw of txt.replace(/\r/g,'').split('\n')){
+    const line=raw.trim();
+    if(/^={3,}$/.test(line)||/^-{3,}$/.test(line)){if(cur&&cur.title)out.push(cur);cur=null;last=null;continue;}
+    const m=line.match(keyRe);
+    if(m){const k=IDEA_KEYS[m[1].toUpperCase().replace(/\s+/g,' ')];
+      if(k==='title'&&cur&&cur.title){out.push(cur);cur=null;}
+      cur=cur||{};cur[k]=m[2].replace(/\*+/g,'').trim();last=k;continue;}
+    if(cur&&last&&line)cur[last]+=' '+line.replace(/\*+/g,'');
+  }
+  if(cur&&cur.title)out.push(cur);
+  for(const i of out){i.tags=String(i.tags||'').split(/\s*[,;]\s*/).map(t=>t.replace(/^["'#“”]+|["'“”.]+$/g,'').trim()).filter(Boolean).slice(0,6);}
+  return out.filter(i=>i.title&&(i.hook||i.name));
+}
+function renderDislikes(){const el=$('#dislikeList');const d=state.dislikes||[];
+  if(!d.length){el.innerHTML='<p class="small">Nothing yet.</p>';return;}
+  el.innerHTML=d.map((x,n)=>`<div class="dl"><div><b>${esc(x.title)}</b><div class="small">${esc(x.note||'Not a fit')}</div></div><button class="copy" data-undl="${n}">Remove</button></div>`).join('');}
+function renderIdeas(){
+  const el=$('#ideaList');const n=state.ideas.length;
+  document.querySelectorAll('[data-ideacount]').forEach(b=>{b.style.display=n?'inline-block':'none';b.textContent=n;});
+  $('#ideasSub').textContent=n?n+' idea'+(n===1?'':'s')+' · newest first':'Newest first';
+  const list=ideaFilter==='new'?state.ideas.filter(i=>i.isNew):state.ideas;
+  if(!list.length){el.innerHTML='<div class="empty"><b>No ideas here yet</b>Make your picks on Create and tap Generate.</div>';return;}
+  el.innerHTML='<div class="grid">'+list.map(i=>{if(!i.id)i.id=uid();const meet=i.how_they_meet||i.opening_situation;return `<article class="card">
+    <div class="card-top"><span class="tagline-s${i.isNew?'':' muted'}">${i.isNew?'New':'Kept'}</span><button class="x" data-dismiss="${i.id}" aria-label="Dismiss idea">×</button></div>
+    <div class="dismiss" id="dz-${i.id}" style="display:none;border-top:none;padding-top:0">
+      <label style="margin-top:0">What's not working? (optional)</label>
+      <textarea id="dn-${i.id}" style="min-height:64px" placeholder="Too dark, don't like the setting, he sounds boring…"></textarea>
+      <div class="row"><button class="btn ghost" data-reject="${i.id}" data-kind="no">Not for me</button><button class="btn quiet" data-reject="${i.id}" data-kind="later">Not right now</button></div>
+      <p class="small" style="margin:8px 0 0">“Not for me” teaches the generator to avoid ideas like this. “Not right now” just removes it.</p>
+    </div>
+    <div><h2>${esc(i.title)}</h2><div class="meta">${esc(i.name)}${i.age?' · '+esc(i.age):''}${i.role?' · '+esc(i.role):''}</div></div>
+    <p class="hook">${esc(i.hook)}</p>
+    ${meet?'<div class="box"><b>How they meet</b>'+esc(meet)+'</div>':''}
+    <details class="more"><summary>Him, her, setting &amp; arc</summary>
+      ${i.personality?'<div class="kv"><b>Him</b>'+esc(i.personality)+'</div>':''}
+      <div class="kv"><b>Her</b>${esc(i.her_role)}</div>
+      <div class="kv"><b>Setting</b>${esc(i.setting)}</div>
+      <div class="kv"><b>Dynamic</b>${esc(i.dynamic)}</div>
+      <div class="kv"><b>His wound</b>${esc(i.his_wound)}</div>
+      <div class="kv"><b>Arc</b>${esc(i.arc)}</div>
+    </details>
+    <div class="tags">${(i.tags||[]).map(t=>'<span class="tag">'+esc(t)+'</span>').join('')}</div>
+    <div class="card-actions"><button class="btn light" data-build="${i.id}">Build</button><button class="btn ghost" data-more="${i.id}">More like this</button></div>
+  </article>`;}).join('')+'</div>';
+}
+
+/* ---------- build ---------- */
+function startBuild(idea){
+  state.build={id:uid(),prev:null,idea,name:(idea.name||'').slice(0,50),tagline:'',background:'',opening:''};
+  state.replyChar='c:'+state.build.id;persist();showTab('build');renderBuild();
+}
+function renderBuild(){
+  const b=state.build;
+  document.querySelectorAll('[data-undo]').forEach(x=>{x.style.display=b&&b.prev&&b.prev[x.dataset.undo]!=null?'inline-block':'none';});
+  $('#buildEmpty').style.display=b?'none':'block';$('#buildArea').style.display=b?'block':'none';
+  if(!b)return;
+  const i=b.idea||{};
+  const meet=i.how_they_meet||i.opening_situation;
+  $('#buildIdea').innerHTML=`<div><h2>${esc(i.title||b.name)}</h2><div class="meta">${esc(i.name||b.name)}${i.age?' · '+esc(i.age):''}${i.role?' · '+esc(i.role):''}</div></div>${i.hook?'<p class="hook">'+esc(i.hook)+'</p>':''}${meet?'<div class="box"><b>How they meet</b>'+esc(meet)+'</div>':''}`;
+  for(const f of ['name','tagline','background','opening']){$('#f-'+f).value=b[f]||'';count(f);}
+}
+function count(f){const v=$('#f-'+f).value,el=$('#c-'+f);el.textContent=v.length.toLocaleString()+' / '+LIMITS[f].toLocaleString();el.classList.toggle('over',v.length>LIMITS[f]);}
+function kinkRule(){
+  const heat=state.inputs.heat,k=(state.inputs.kinks||'').trim();
+  if(heat==='fade')return 'Keep intimacy romantic and non-explicit; sexual scenes fade to black. List what draws him to her and how he shows affection at each stage.';
+  const base=heat==='explicit'
+    ?'Write this section fully and explicitly, as the writer does in her own sheets.'
+    :'Sensual, not graphic.';
+  return base+` Include: what attracts him and what undoes him; how he behaves in intimate moments; his dominance or softness; how consent works in their dynamic; aftercare, if it fits him. Then a KINKS AND PREFERENCES list of 6-10 kinks${k?' (must include: '+k+')':' that fit his personality and the genre'}, each with how it shows in him and one line he would say. Then his limits, if he has any.`;
+}
+async function buildBackground(){
+  const b=state.build,words=Number($('#bgLen').value);
+  const intro=`CHARACTER IDEA:
+${ideaText(b.idea)}
+
+${herLine()}
+Heat level: ${HEAT[state.inputs.heat]}
+
+The sheet is plain text: no markdown, no asterisks, no # symbols. Use CAPITALISED section headings and "·" for bullet points. Be concrete and specific; every detail should be usable in roleplay. Write in clear, correct English sentences.
+
+NO SHARED HISTORY: the roleplay starts at their first meeting. Unless the idea explicitly says they already know each other, they have never met, and nothing has happened between them yet. Never write scenes, memories, conversations or events between him and her as if they occurred. Anything about the two of them is written as what he WILL do or how he WOULD react as things develop (future or conditional tense), never as something that happened. If the idea says they already know each other, state only the history the idea gives, in a sentence or two, and invent no specific shared scenes.`;
+  const promptA=`Write the FIRST HALF of the Background for this character, to paste into Tipsy's Background field. The AI reads it to know who he is and how to play him.
+
+${intro}
+
+Output exactly two parts, with these markers on their own lines:
+===TAGLINE===
+One or two evocative sentences for the character card.
+===BACKGROUND===
+Then these sections, in order:
+1. CRITICAL RULES: a DO / DO NOT list for pacing (the slow burn, what he must not rush), including that he has no memories of her and no shared past with her unless the idea gives one, plus a short stage timeline.
+2. CORE PERSONA: name, age, role and setting, addressed to the AI in second person ("You are ...").
+3. APPEARANCE: height, build, face, eyes, hair, skin, scars or marks, how he dresses, his scent, a distinctive object he carries or wears, how he moves.
+4. VOICE AND SPEECH: how he talks, accent or verbal habits, how it changes when angry, flustered or tender, and how it evolves by stage, with sample lines.
+5. PERSONALITY: 5-6 core traits, each with how it shows; public face versus private self; strengths; flaws; fears; quirks and habits.
+6. LIKES AND DISLIKES: food, drink, places, music, hobbies, comforts, pet peeves, things he can't stand.
+7. HISTORY: family, upbringing, the wound that shaped him, the secret he keeps, why he is where he is now.
+8. WORLD AND SETTING: the world's era, rules, politics or lore; key locations in rich sensory detail; his private space; where she will live or spend time.
+
+Stop after section 8. Length: about ${Math.round(words*0.55)} words.`;
+  status('#buildStatus','Writing the background (part 1 of 2)…',false,true);
+  const rawA=await callAPI([{role:'system',content:sys()},{role:'user',content:promptA}],{longForm:true,onThink:()=>status('#buildStatus','Planning the background (part 1 of 2)…',false,true),maxTokens:Math.min(12000,Math.round(words*1.4)+1500),onToken:t=>{$('#f-background').value=t;count('background');}});
+  const parts=rawA.split(/===\s*BACKGROUND\s*===/i);
+  let partA=clean(rawA);
+  if(parts.length>1){b.tagline=clean(parts[0].replace(/===\s*TAGLINE\s*===/i,''));partA=clean(parts.slice(1).join(''));}
+  b.background=partA;persist();renderBuild();
+
+  const promptB=`Here is the first half of this character's Background:
+
+${partA}
+
+Now write the SECOND HALF, continuing the same sheet in the same format and staying consistent with every detail above.
+
+${intro}
+
+Write these sections, in order, and nothing before them:
+9. DAILY LIFE: his routine, work, and how he spends his evenings and nights, as it is before he meets her.
+10. SUPPORTING CAST: 3-5 named side characters, each with who they are and their stance toward him and toward her.
+11. RELATIONSHIP ARC: 4-5 stages from first meeting to full devotion, written as guidance for the future ("At this stage he will…"), never as events that happened: what changes in his behaviour, touch and words at each stage, and which endearments (if any) unlock when.
+12. SPEECH SAMPLES BY STAGE: for each stage, 2-3 standalone lines he might say, in double quotes, with a few words on the situation they suit. Lines only: no scenes, no narration of her, nothing written as having happened.
+13. DESIRE AND INTIMACY: ${kinkRule()}
+14. ROLEPLAY RULES: the story begins at the opening scene and nothing has happened between them before it; play only him; never write the writer's character's dialogue, actions, thoughts or feelings; her past and secrets stay unknown until she reveals them; write in novel-style third person with dialogue in double quotes and no asterisks; keep the slow burn.
+
+Length: about ${Math.round(words*0.45)} words.`;
+  status('#buildStatus','Writing the background (part 2 of 2)…',false,true);
+  const rawB=await callAPI([{role:'system',content:sys()},{role:'user',content:promptB}],{longForm:true,onThink:()=>status('#buildStatus','Planning the background (part 2 of 2)…',false,true),maxTokens:Math.min(12000,Math.round(words*1.2)+1500),onToken:t=>{$('#f-background').value=partA+'\n\n'+t;count('background');}});
+  b.background=partA+'\n\n'+clean(rawB);
+  persist();renderBuild();
+}
+async function buildOpening(){
+  const b=state.build,words=Number($('#openLen').value);
+  if(!b.background.trim())throw new Error('Write the background first.');
+  const end=$('#openEnd').value==='before'
+    ?'End just before they meet face to face, on his anticipation. She appears only as news, a file, a letter or a rumour.'
+    :'End at the moment of meeting, on his first line to her, leaving her the next move. You may describe what he sees of her from the outside in a sentence or two, but never her thoughts, words or choices.';
+  const prompt=`Write the Opening scene for this character, to paste into Tipsy's Opening field.
+
+CHARACTER BACKGROUND:
+${b.background}
+
+${herLine()}
+
+STYLE EXAMPLES from the writer's own openings. Match their voice, rhythm and texture, not their plots:
+${styleBlock()}
+
+Rules:
+- Novel-style prose, third person, past tense, close on his point of view and inner thoughts.
+- DIALOGUE RULE: every word any character says out loud goes inside double quotation marks, every time, including a line that follows "he said" or "he spoke". Never write speech without quotes, and never mark speech with dashes, colons, italics or a new unquoted paragraph.
+    Right: He looked up from the engine. "You're early."
+    Right: He spoke quietly. "Stay behind me."
+    Wrong: He spoke quietly. Stay behind me.
+    Wrong: He said: Stay behind me.
+- Never use asterisks. No markdown, no headings, no title.
+- Start inside his ordinary life in this setting, with specific sensory detail, then let her arrival disrupt it.
+- Build to this first meeting: ${(b.idea&&(b.idea.how_they_meet||b.idea.opening_situation))||'the meeting described in the background'}
+- He is the only character you control. ${end}
+- About ${words} words, and well under 20,000 characters.
+Output only the scene.`;
+  status('#buildStatus','Writing the opening…',false,true);
+  const raw=await callAPI([{role:'system',content:sys()},{role:'user',content:prompt}],{longForm:true,onThink:()=>status('#buildStatus','Planning the opening…',false,true),maxTokens:Math.round(words*2.4)+1000,onToken:t=>{$('#f-opening').value=t;count('opening');}});
+  b.opening=clean(raw);persist();renderBuild();
+  await fixDialogue();
+}
+async function fixDialogue(){
+  const b=state.build;if(!b||!(b.opening||'').trim())return;
+  status('#buildStatus','Checking every line of dialogue is in quotes…',false,true);
+  const prompt=`Proofread this roleplay opening for ONE problem only: spoken dialogue that is not inside double quotation marks.
+
+<<<OPENING
+${b.opening}
+OPENING>>>
+
+Find every place where a character says something out loud but the words are not wrapped in double quotes (for example a line after "he said" or "he spoke" written as plain text, speech after a colon or dash, or speech in its own unquoted paragraph) and wrap those exact words in double quotes. Thoughts he does not say aloud stay unquoted. Change nothing else at all: same words, same order, same paragraphs. If everything is already correct, return the text exactly as it is.
+Output only the complete corrected opening, with no notes or markers.`;
+  const out=await callAPI([{role:'system',content:sys()},{role:'user',content:prompt}],{longForm:true,maxTokens:Math.min(30000,Math.round(b.opening.length/3)+2500),onToken:t=>{$('#f-opening').value=t;count('opening');}});
+  const fixed=clean(out.replace(/^<<<\w+\s*|\s*\w+>>>$/g,''));
+  if(fixed&&fixed.length>b.opening.length*0.85)b.opening=fixed;
+  persist();renderBuild();
+}
+async function reviseField(f){
+  const b=state.build;if(!b)return;
+  const note=$('#fb-'+f).value.trim();
+  const cur=($('#f-'+f).value||'').trim();
+  if(!cur){status('#buildStatus','Build the '+f+' first, then ask for changes.',true);return;}
+  if(!note){status('#buildStatus','Type what you want changed in the box under the '+f+'.',true);$('#fb-'+f).focus();return;}
+  const label=f==='background'?'Background':'Opening';
+  const syncOpening=f==='background'&&(b.opening||'').trim();
+  b.prev=b.prev||{};b.prev[f]=cur;if(syncOpening)b.prev.opening=b.opening;
+  const tok=t=>Math.min(30000,Math.round(t.length/3)+2500);
+  const prompt=`Here is a character's ${label} for Tipsy:
+
+<<<${label.toUpperCase()}
+${cur}
+${label.toUpperCase()}>>>
+
+The writer wants these changes:
+${note}
+
+Rewrite the ${label} with ONLY these changes. Everything she did not ask to change stays exactly as it is, word for word, in the same order and format. If a change affects details elsewhere in the text (for example a new appearance that an earlier line describes differently), update those mentions too so nothing contradicts. Keep every existing rule: no asterisks, no markdown, dialogue in double quotes${f==='background'?', no shared history between him and her before the opening':''}.
+Output the complete revised ${label} and nothing else: no notes, no explanation, no markers.`;
+  setBusy(true);status('#buildStatus','Applying your changes to the '+f+'…',false,true);
+  try{
+    const out=await callAPI([{role:'system',content:sys()},{role:'user',content:prompt}],{longForm:true,maxTokens:tok(cur),onThink:()=>status('#buildStatus','Planning your changes…',false,true),onToken:t=>{$('#f-'+f).value=t;count(f);}});
+    b[f]=clean(out.replace(/^<<<\w+\s*|\s*\w+>>>$/g,''));persist();renderBuild();
+    if(f==='opening')await fixDialogue();
+    if(syncOpening){
+      status('#buildStatus','Checking the opening matches…',false,true);
+      const p2=`Here is the character's revised Background:
+
+${b.background}
+
+Here is his Opening scene:
+
+${b.opening}
+
+The writer changed the background like this: ${note}
+Update the Opening ONLY where it now contradicts the background (for example his appearance). If nothing contradicts it, return it unchanged. Change nothing else, word for word. No asterisks, no markdown, dialogue in double quotes. Output only the complete Opening.`;
+      const o2=await callAPI([{role:'system',content:sys()},{role:'user',content:p2}],{longForm:true,maxTokens:tok(b.opening),onToken:t=>{$('#f-opening').value=t;count('opening');}});
+      b.opening=clean(o2);persist();renderBuild();
+      await fixDialogue();
+    }
+    $('#fb-'+f).value='';
+    status('#buildStatus','Done. Changes applied'+(syncOpening?' (the opening was checked to match)':'')+'. Tap “Undo last change” if you preferred the old version.');
+  }catch(e){
+    if(b.prev&&b.prev[f]!=null){b[f]=b.prev[f];}
+    if(syncOpening&&b.prev.opening!=null)b.opening=b.prev.opening;
+    persist();renderBuild();
+    status('#buildStatus',e.name==='AbortError'?'Stopped. Nothing was changed.':e.message+' Nothing was changed.',e.name!=='AbortError');
+  }
+  setBusy(false);
+}
+function undoField(f){const b=state.build;if(!b||!b.prev||b.prev[f]==null)return;
+  const keep=b[f];b[f]=b.prev[f];b.prev[f]=keep;
+  if(f==='background'&&b.prev.opening!=null){const k2=b.opening;b.opening=b.prev.opening;b.prev.opening=k2;}
+  persist();renderBuild();status('#buildStatus','Switched back. Tap Undo again to return to the changed version.');}
+async function run(steps){
+  if(busy)return;setBusy(true);
+  try{for(const s of steps)await s();
+    const b=state.build;
+    if(b&&(b.background||'').trim()&&(b.opening||'').trim()){saveCharAndRoster(true);status('#buildStatus','Done. '+(b.name||'He')+' is in Chats and your roster, ready to go. Any edits you make here are saved when you tap Save.');}
+    else status('#buildStatus','Done.');}
+  catch(e){if(e.name==='AbortError'){status('#buildStatus','Stopped.');}else status('#buildStatus',e.message,true);}
+  setBusy(false);
+}
+
+
+/* ---------- reply ---------- */
+const REPLY_SYSTEM=`You are ghostwriting the writer's OWN character in her private, uncensored adult (18+) roleplay on the Tipsy app. The Tipsy AI plays the male character; you write only her side of the scene.
+
+This is an adult NSFW creative project. When the scene goes there, write sexual content explicitly and in detail. Never soften, censor, fade to black, moralise, add disclaimers or warnings, or water down what she asks for. Follow her directions exactly.
+
+Rules:
+- Both characters are adults and written as adults. No age-regression or childlike roleplay in sexual content. Adult power dynamics, a "Daddy" title and praise between adults are fine.
+- Write ONLY her: her actions, words, thoughts and feelings. Never write his dialogue, actions, thoughts or decisions, and never move the scene forward on his behalf. End on her, leaving him something to respond to.
+- Stay true to her character and to everything already established in the scene.
+- Novel-style prose. Match the tense of his message.
+- DIALOGUE RULE: every word anyone says out loud goes inside double quotation marks, every time, including a line after "she said". Never write speech without quotes, or mark it with dashes, colons, italics or a new unquoted paragraph.
+- Never use asterisks. No markdown, no title, no notes, no options: output only her response.`;
+function replyChars(){
+  const out=[],seen=new Set();
+  if(state.build&&state.build.name){out.push({key:'c:'+state.build.id,label:'Current build · '+state.build.name,src:state.build});seen.add(state.build.id);}
+  for(const x of state.characters||[]){if(seen.has(x.id))continue;seen.add(x.id);out.push({key:'c:'+x.id,label:'Character · '+x.name,src:x});}
+  for(const r of state.roster){out.push({key:'r:'+r.id,label:'Roster · '+r.name,src:{name:r.name,background:r.summary+(r.style?'\n\nHow his opening reads:\n'+r.style:'')}});}
+  return out;
+}
+function curReply(){const list=replyChars();return list.find(x=>x.key===state.replyChar)||list[0]||null;}
+function chat(){const c=curReply();if(!c)return null;state.chats[c.key]=state.chats[c.key]||{herProfile:'',log:[]};return state.chats[c.key];}
+function renderReply(){
+  const list=replyChars(),sel=$('#replyChar');
+  sel.innerHTML=list.length?list.map(x=>`<option value="${esc(x.key)}">${esc(x.label)}</option>`).join(''):'<option value="">No characters yet</option>';
+  const c=curReply();if(c){state.replyChar=c.key;sel.value=c.key;}
+  $('#replyCharNote').textContent=c?(c.key.startsWith('r:')?'Roster characters only have a summary, so replies have less to go on than with a full built character.':'Uses his full background for context.'):'Build or save a character first.';
+  const ch=chat();$('#herProfile').value=ch?ch.herProfile:'';
+  const log=ch?ch.log:[];
+  $('#sceneLog').innerHTML=log.length?log.slice(-8).map(e=>`<div class="log-item ${e.who}"><b>${e.who==='her'?'Her':'Him'}</b><p>${esc(e.text)}</p></div>`).join('')+(log.length>8?`<p class="small">+ ${log.length-8} earlier</p>`:''):'<p class="small">Nothing yet.</p>';
+  const last=log.length&&log[log.length-1].who==='her'?log[log.length-1].text:'';
+  if(!$('#herOut').value||document.activeElement!==$('#herOut'))$('#herOut').value=last;
+  countReply();
+}
+function countReply(){$('#c-reply').textContent=($('#herOut').value.length).toLocaleString()+' chars';}
+function replyPrompt(his,dir,ch,c){
+  const log=ch.log.slice(-12).map(e=>(e.who==='her'?'HER':'HIM')+':\n'+e.text.slice(0,4000)).join('\n\n');
+  const pov=$('#replyPov').value==='first'?'first person, as her ("I")':'third person ("she")';
+  return `HIS CHARACTER: ${c.src.name}
+${(c.src.background||'').slice(0,20000)}
+
+HER CHARACTER (the one you write):
+${ch.herProfile.trim()||'Not described. Keep her consistent with how she has acted in the scene so far.'}
+
+SCENE SO FAR (oldest first):
+${log||'This is the start of the scene.'}
+
+HIS LATEST MESSAGE:
+${his}
+
+HOW SHE SHOULD RESPOND:
+${dir||'Her choice: respond the way she naturally would, true to her character.'}
+
+Write her response in ${pov}, about ${$('#replyLen').value} words.`;
+}
+async function quoteCheck(text,onToken){
+  const out=await callAPI([{role:'system',content:P('reply')},{role:'user',content:`Proofread this text for ONE problem only: spoken dialogue that is not inside double quotation marks. Wrap any spoken words that lack quotes in double quotes. Thoughts not said aloud stay unquoted. Change nothing else at all. If it is already correct, return it unchanged. Output only the text.
+
+<<<TEXT
+${text}
+TEXT>>>`}],{longForm:true,maxTokens:Math.round(text.length/3)+2000,onToken});
+  const f=clean(out.replace(/^<<<\w+\s*|\s*\w+>>>$/g,''));
+  return f&&f.length>text.length*0.85?f:text;
+}
+async function writeReply(mode){
+  if(busy)return;const c=curReply(),ch=chat();
+  if(!c){status('#replyStatus','Build or save a character first.',true);return;}
+  ch.herProfile=$('#herProfile').value;
+  let his=$('#hisMsg').value.trim();let dir=$('#herDir').value.trim();
+  const log=ch.log;
+  if(mode==='redo'){
+    if(!(log.length&&log[log.length-1].who==='her')){status('#replyStatus','Write a response first.',true);return;}
+    const lastHim=[...log].reverse().find(e=>e.who==='him');his=lastHim?lastHim.text:'';
+    if(!dir)dir=log[log.length-1].dir||'';
+  }
+  if(!his){status('#replyStatus','Paste his message first.',true);$('#hisMsg').focus();return;}
+  const prevLog=log.slice();
+  if(mode==='redo')log.pop();
+  else if(!(log.length&&log[log.length-1].who==='him'&&log[log.length-1].text===his))log.push({who:'him',text:his});
+  const ctx={...ch,log:log.slice(0,-1)};
+  setBusy(true);status('#replyStatus','Writing her response…',false,true);
+  try{
+    let out=await callAPI([{role:'system',content:P('reply')},{role:'user',content:replyPrompt(his,dir,ctx,c)}],{longForm:true,maxTokens:Math.round(Number($('#replyLen').value)*2.5)+800,onThink:()=>status('#replyStatus','Thinking about her response…',false,true),onToken:t=>{$('#herOut').value=t;countReply();}});
+    out=clean(out);
+    status('#replyStatus','Checking every line of dialogue is in quotes…',false,true);
+    out=await quoteCheck(out,t=>{$('#herOut').value=t;countReply();});
+    log.push({who:'her',text:out,dir});
+    if(mode!=='redo'){$('#hisMsg').value='';}
+    $('#herDir').value='';
+    persist();$('#herOut').value=out;renderReply();
+    status('#replyStatus','Done. Copy it into Tipsy. When he replies, paste his next message above.');
+  }catch(e){ch.log=prevLog;persist();renderReply();status('#replyStatus',e.name==='AbortError'?'Stopped.':e.message,e.name!=='AbortError');}
+  setBusy(false);
+}
+async function reviseReply(){
+  if(busy)return;const c=curReply(),ch=chat();const cur=$('#herOut').value.trim(),note=$('#fb-reply').value.trim();
+  if(!cur){status('#replyStatus','Write a response first.',true);return;}
+  if(!note){status('#replyStatus','Type what you want changed first.',true);$('#fb-reply').focus();return;}
+  setBusy(true);status('#replyStatus','Applying your changes…',false,true);
+  try{
+    let out=await callAPI([{role:'system',content:P('reply')},{role:'user',content:`Here is her response in the roleplay:
+
+<<<RESPONSE
+${cur}
+RESPONSE>>>
+
+The writer wants these changes: ${note}
+
+Rewrite her response with only these changes; keep everything else as it is. Output only the revised response.`}],{longForm:true,maxTokens:Math.round(cur.length/3)+1500,onToken:t=>{$('#herOut').value=t;countReply();}});
+    out=clean(out.replace(/^<<<\w+\s*|\s*\w+>>>$/g,''));
+    out=await quoteCheck(out,t=>{$('#herOut').value=t;countReply();});
+    const log=ch.log;if(log.length&&log[log.length-1].who==='her')log[log.length-1].text=out;else log.push({who:'her',text:out});
+    $('#fb-reply').value='';persist();$('#herOut').value=out;renderReply();status('#replyStatus','Changes applied.');
+  }catch(e){status('#replyStatus',e.name==='AbortError'?'Stopped.':e.message,e.name!=='AbortError');$('#herOut').value=cur;}
+  setBusy(false);
+}
+
+
+/* ---------- characters & chat ---------- */
+const CHAR_SYSTEM=`You are {{name}}, the male lead in the writer's private, uncensored adult (18+) roleplay. She plays her own character; you play {{name}} and, only when the scene needs them, side characters.
+
+This is an adult NSFW creative project. When the scene goes there, write sexual content explicitly and in detail. Never soften, censor, fade to black, moralise, add disclaimers or warnings, or break character, unless she writes out of character first.
+
+Rules:
+- Both characters are adults and written as adults.
+- Play ONLY {{name}}. Never write her dialogue, actions, thoughts or feelings, and never decide what she does or how she reacts. React to what she just did, then stop and leave her room to act.
+- Stay true to the character sheet below, including its pacing, stages and rules.
+- Novel-style prose, third person, past tense, close on {{name}}.
+- DIALOGUE RULE: every word anyone says out loud goes inside double quotation marks, every time, including a line after "he said". Never write speech without quotes, or mark it with dashes, colons, italics or a new unquoted paragraph.
+- Never use asterisks. No markdown, no headings, no notes, no options.
+- Keep each reply around {{length}} words.`;
+const PROMPT_LABELS={base:'Rules for creating characters',style:'House style',reply:'Rules for writing her replies',char:'Rules for him in Chat'};
+let chatOpen=null;
+
+function charById(id){return (state.characters||[]).find(c=>c.id===id)||null;}
+function initials(n){return String(n||'?').split(/\s+/).filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase();}
+function avatarHTML(c,cls){return c&&c.avatar?`<img class="${cls}" src="${c.avatar}" alt="">`:`<div class="${cls} noimg">${esc(initials(c&&c.name))}</div>`;}
+function migrateChars(){
+  state.characters=state.characters||[];
+  for(const s of state.saved||[]){if(!charById(s.id))state.characters.push({id:s.id,name:s.name||'Untitled',tagline:s.tagline||'',background:s.background||'',opening:s.opening||'',idea:s.idea||null,avatar:'',herProfile:'',chats:[],activeChat:null,createdAt:s.savedAt||new Date().toISOString()});}
+  state.saved=[];
+}
+let charView='list';
+function lastAct(c){return Math.max(0,...(c.chats||[]).map(x=>Date.parse(x.updated||x.created)||0));}
+function when(t){if(!t)return '';const d=new Date(t),n=new Date();return d.toDateString()===n.toDateString()?d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}):d.toLocaleDateString([],{day:'2-digit',month:'2-digit'});}
+function renderChars(){
+  const el=$('#charList'),list=state.characters||[];
+  $('#charsTitle').textContent=charView==='grid'?'Characters':'Chats';
+  $('#charsKicker').textContent=charView==='grid'?'Everyone you have created':'Pick up where you left off, or start someone new';$('#replyLink').style.display=charView==='grid'?'none':'';
+  if(!list.length){el.innerHTML='<div class="empty"><b>No characters yet</b>Tap New character to add one (you can paste a whole Google Doc), or build one from an idea.</div>';return;}
+  if(charView==='grid'){
+    el.innerHTML='<div class="char-grid">'+list.map(c=>{const n=(c.chats||[]).reduce((a,x)=>a+x.msgs.length,0);return `<article class="char-card">
+      <button class="char-pic" data-chat="${c.id}" aria-label="Chat with ${esc(c.name)}">${avatarHTML(c,'cimg')}</button>
+      <div class="char-info"><h2>${esc(c.name)}</h2>${c.tagline?'<p>'+esc(c.tagline)+'</p>':''}<div class="meta">${(c.chats||[]).length?(c.chats.length+' chat'+(c.chats.length===1?'':'s')+' · '+n+' messages'):'Not started'}</div></div>
+      <div class="card-actions"><button class="btn light" data-chat="${c.id}">${(c.chats||[]).length?'Continue':'Start'}</button><button class="btn ghost" data-fresh="${c.id}">New chat</button><button class="btn quiet" data-edit="${c.id}">Edit</button></div>
+    </article>`;}).join('')+'</div>';return;}
+  const fresh=list.filter(c=>!(c.chats||[]).some(x=>x.msgs.length>1));
+  const going=list.filter(c=>(c.chats||[]).some(x=>x.msgs.length>1)).sort((a,b)=>lastAct(b)-lastAct(a));
+  let h='';
+  h+='<div class="sec-label">START SOMETHING NEW</div><div class="story-row">'+fresh.map(c=>`<button class="story" data-chat="${c.id}"><div class="ring">${avatarHTML(c,'sav')}</div><span class="nm">${esc(c.name.split(' ')[0])}</span></button>`).join('')+'<button class="story" data-view="grid"><div class="plus">+</div><span class="nm">See all</span></button></div>';
+  h+='<div class="sec-label">CONTINUE</div>';
+  h+=going.length?'<div class="clist">'+going.map(c=>{const ch=(c.chats||[]).slice().sort((a,b)=>(Date.parse(b.updated||b.created)||0)-(Date.parse(a.updated||a.created)||0))[0];const last=ch&&ch.msgs.length?mtext(ch.msgs[ch.msgs.length-1]):'';const idx=c.chats.length-c.chats.indexOf(ch);
+    return `<button class="crow" data-chat="${c.id}" data-cid="${ch.id}">${avatarHTML(c,'av')}<div style="min-width:0"><b>${esc(c.name)}<small>· chat ${idx}</small></b><div class="prev">${esc(last.replace(/\s+/g,' ').slice(0,140))}</div></div><div class="when">${when(ch.updated||ch.created)}</div></button>`;}).join('')+'</div>':'<div class="empty"><b>No chats yet</b>Tap someone above to start.</div>';
+  el.innerHTML=h;
+}
+
+/* editor */
+let ceId=null,ceAvatar='';
+function openEditor(id){
+  const c=id?charById(id):null;ceId=c?c.id:null;ceAvatar=c?c.avatar||'':'';
+  $('#ceTitle').textContent=c?c.name:'New character';
+  $('#ceName').value=c?c.name:'';$('#ceTag').value=c?c.tagline||'':'';$('#ceHer').value=c?c.herProfile||'':'';
+  $('#ceBg').value=c?c.background||'':'';$('#ceOp').value=c?c.opening||'':'';$('#ceDoc').value='';status('#ceStatus','');
+  $('#ceDelete').style.display=c?'':'none';$('#ceToBuild').style.display=c?'':'none';
+  renderCePic();ceCounts();showTab('charedit');
+}
+function renderCePic(){$('#cePic').innerHTML=ceAvatar?`<img src="${ceAvatar}" alt="">`:'<span>No picture yet</span>';}
+function ceCounts(){$('#ceBgCount').textContent=$('#ceBg').value.length.toLocaleString()+' chars';$('#ceOpCount').textContent=$('#ceOp').value.length.toLocaleString()+' chars';}
+function resizeImage(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>{const img=new Image();img.onload=()=>{const max=640;let w=img.width,h=img.height;const s=Math.min(1,max/Math.max(w,h));w=Math.round(w*s);h=Math.round(h*s);const cv=document.createElement('canvas');cv.width=w;cv.height=h;cv.getContext('2d').drawImage(img,0,0,w,h);res(cv.toDataURL('image/jpeg',0.85));};img.onerror=rej;img.src=r.result;};r.onerror=rej;r.readAsDataURL(file);});}
+function splitDoc(t){
+  t=String(t||'').replace(/\r/g,'');
+  const m=t.match(/^[ \t#*]*(intro(?:duction)? scene|opening scene|opening)[ \t*:]*$/im);
+  let bg=t,op='';
+  if(m){bg=t.slice(0,m.index);op=t.slice(m.index+m[0].length);}
+  bg=bg.replace(/^[ \t#*]*character sheet[ \t*:]*$/im,'');
+  const tidy=x=>x.replace(/\\([\[\]#*_!\-~`.()])/g,'$1').replace(/^[ \t]*#{1,6}[ \t]*/gm,'').replace(/\*\*(.*?)\*\*/g,'$1').replace(/[ \t]+\n/g,'\n').replace(/\n{3,}/g,'\n\n').trim();
+  return {bg:tidy(bg),op:tidy(op),found:!!m};
+}
+function saveEditor(){
+  const name=$('#ceName').value.trim();if(!name){status('#ceStatus','Give him a name first.',true);$('#ceName').focus();return;}
+  let c=ceId?charById(ceId):null;
+  if(!c){c={id:uid(),chats:[],activeChat:null,createdAt:new Date().toISOString()};state.characters.unshift(c);}
+  Object.assign(c,{name,tagline:$('#ceTag').value.trim(),herProfile:$('#ceHer').value,background:$('#ceBg').value.trim(),opening:$('#ceOp').value.trim(),avatar:ceAvatar});
+  persist();renderChars();showTab('chars');
+}
+
+/* chat state */
+function newChat(c){const op=(c.opening||'').trim();const ch={id:uid(),title:'Chat '+((c.chats||[]).length+1)+' · '+new Date().toLocaleDateString(),created:new Date().toISOString(),len:300,msgs:op?[{id:uid(),role:'him',alts:[op],alt:0}]:[]};c.chats=c.chats||[];c.chats.unshift(ch);c.activeChat=ch.id;return ch;}
+function curChat(c){c=c||charById(chatOpen);if(!c)return null;let ch=(c.chats||[]).find(x=>x.id===c.activeChat);if(!ch)ch=(c.chats||[])[0]||newChat(c);c.activeChat=ch.id;return ch;}
+function mtext(m){return m.alts?m.alts[m.alt||0]:m.text||'';}
+function openChat(id){chatOpen=id;const c=charById(id);if(!c)return;curChat(c);persist();showTab('chat');renderChat(true);}
+function dlg(h){return h.replace(/(&quot;|“)([\s\S]*?)(&quot;|”)/g,'<b class="dlg">$1$2$3</b>');}
+function paras(t){return dlg(esc(t)).split(/\n{2,}/).map(p=>'<p>'+p.replace(/\n/g,'<br>')+'</p>').join('');}
+function renderChat(scroll){
+  const c=charById(chatOpen);if(!c)return;const ch=curChat(c);
+  $('#chatAv').innerHTML=avatarHTML(c,'hav');$('#chatName').textContent=c.name;
+  $('#chatSel').innerHTML=c.chats.map(x=>`<option value="${x.id}"${x.id===ch.id?' selected':''}>${esc(x.title)} (${x.msgs.length})</option>`).join('');
+  $('#chatLen').value=String(ch.len||300);$('#chatHer').value=c.herProfile||'';$('#chatPov').value=state.settings.chatPov||'third';
+  const lastHim=(()=>{for(let i=ch.msgs.length-1;i>=0;i--)if(ch.msgs[i].role==='him')return i;return -1;})();
+  const isLast=i=>i===ch.msgs.length-1;
+  const IC={regen:"<svg aria-hidden=\"true\" width=\"15\" height=\"15\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M21 12a9 9 0 1 1-3-6.7L21 8\"/><path d=\"M21 3v5h-5\"/></svg>",pen:"<svg aria-hidden=\"true\" width=\"15\" height=\"15\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 20h9\"/><path d=\"M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z\"/></svg>",copy:"<svg aria-hidden=\"true\" width=\"15\" height=\"15\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"9\" y=\"9\" width=\"12\" height=\"12\" rx=\"2\"/><path d=\"M5 15V5a2 2 0 0 1 2-2h10\"/></svg>"};
+  $('#msgs').innerHTML=ch.msgs.length?ch.msgs.map((m,i)=>{const him=m.role==='him';const nAlt=(m.alts||[]).length;const lastOne=him&&i===lastHim&&isLast(i);
+    const altsH=him&&nAlt>1?`<span class="alts"><button data-alt="${m.id}" data-d="-1" aria-label="Previous version">‹</button>${(m.alt||0)+1}/${nAlt}<button data-alt="${m.id}" data-d="1" aria-label="Next version">›</button></span>`:'';
+    const more=`<div class="mmore" id="mm-${m.id}" style="display:none">${lastOne?'':`<button data-mcopy="${m.id}">Copy</button>`}${him&&!lastOne?`<button data-mchange="${m.id}">Change</button>`:''}<button data-medit="${m.id}">Edit</button><button data-mdel="${m.id}">Delete</button></div>`;
+    return `<div class="msg ${him?'him':'her'}" data-mid="${m.id}">
+    ${him?avatarHTML(c,'mav'):''}
+    <div class="mbody">
+      <div class="mname">${him?esc(c.name):'You'}</div>
+      <div class="mtext" id="mt-${m.id}">${paras(mtext(m))}</div>
+      ${lastOne?`<div class="tbar">${i>0?`<button data-regen="${m.id}" aria-label="Regenerate" title="Regenerate">${IC.regen}</button>`:''}<button data-mchange="${m.id}" aria-label="Change this reply" title="Change">${IC.pen}</button><button data-mcopy="${m.id}" aria-label="Copy" title="Copy">${IC.copy}</button>${altsH}<button data-more="${m.id}" aria-label="More actions" title="More">⋯</button></div>${more}`:`${altsH?`<div class="tbar">${altsH}</div>`:''}<button class="dots" data-more="${m.id}" aria-label="More actions">⋯</button>${more}`}
+      <div class="mfb" id="mfb-${m.id}" style="display:none">
+        <textarea id="mfbt-${m.id}" placeholder="What should change? e.g. Make him colder, and cut the last paragraph."></textarea>
+        <div class="fb-row"><button class="btn" data-applyfb="${m.id}">Apply changes</button><button class="btn quiet" data-mchange="${m.id}">Cancel</button></div>
+      </div>
+    </div></div>`;}).join(''):'<div class="empty"><b>No messages yet</b>This character has no opening. Write her first message below.</div>';
+  $('#chatSub').textContent=busy?c.name.split(' ')[0]+' is writing…':(ch.title.split(' · ')[0]+' · '+ch.msgs.length+' messages');
+  if(scroll)requestAnimationFrame(()=>{const last=$('#msgs').lastElementChild;if(last)last.scrollIntoView({block:'start'});});
+}
+function fillChar(t,c,len){return t.replace(/\{\{name\}\}/g,c.name).replace(/\{\{length\}\}/g,String(len));}
+function hisMessages(c,ch,upto,extra){
+  let sys=fillChar(P('char'),c,ch.len||300)+'\n\nCHARACTER SHEET FOR '+c.name.toUpperCase()+':\n'+(c.background||'(no sheet)');
+  if((c.herProfile||'').trim())sys+="\n\nHER CHARACTER (played by the writer, never by you):\n"+c.herProfile.trim();
+  const hist=ch.msgs.slice(0,upto);let budget=150000,start=hist.length;
+  for(let i=hist.length-1;i>=0;i--){budget-=mtext(hist[i]).length;if(budget<0)break;start=i;}
+  const out=[{role:'system',content:sys},{role:'user',content:start>0?'[The story so far has been going for a while; earlier messages are omitted. Continue naturally.]':'[The roleplay begins.]'}];
+  for(const m of hist.slice(start)){const role=m.role==='him'?'assistant':'user';const t=mtext(m);
+    if(out[out.length-1].role===role&&role!=='system')out[out.length-1].content+='\n\n'+t;else out.push({role,content:t});}
+  if(out[out.length-1].role!=='user')out.push({role:'user',content:extra||'[She waits. Continue the scene as '+c.name+'.]'});
+  else if(extra)out[out.length-1].content+='\n\n'+extra;
+  return out;
+}
+function chatBusy(on,msg){setBusy(on);status('#chatStatus',msg||'',false,!!msg&&on);const c=charById(chatOpen),ch=c&&curChat(c);if(c&&$('#chatSub'))$('#chatSub').textContent=on?c.name.split(' ')[0]+(msg&&/thinking/.test(msg)?' is thinking…':' is writing…'):(ch.title.split(' · ')[0]+' · '+ch.msgs.length+' messages');}
+async function maybeQuote(text,onTok){if(state.settings.chatQuote===false)return text;status('#chatStatus','Checking every line of dialogue is in quotes…',false,true);return quoteCheck(text,onTok);}
+function streamInto(id){return t=>{const el=$('#mt-'+id);if(el)el.innerHTML=paras(t);};}
+async function genHim(mode,mid){
+  if(busy)return;const c=charById(chatOpen),ch=curChat(c);
+  if(!(c.background||'').trim()){status('#chatStatus','This character has no background yet. Add one in Edit character.',true);return;}
+  let m,upto;
+  if(mode==='regen'){m=ch.msgs.find(x=>x.id===mid);upto=ch.msgs.indexOf(m);}
+  else{m={id:uid(),role:'him',alts:[''],alt:0};ch.msgs.push(m);upto=ch.msgs.length-1;renderChat(true);}
+  chatBusy(true,c.name+' is writing…');
+  try{
+    const len=ch.len||300;
+    let out=await callAPI(hisMessages(c,ch,upto),{longForm:true,maxTokens:Math.round(len*2.6)+800,onThink:()=>status('#chatStatus',c.name+' is thinking…',false,true),onToken:streamInto(m.id)});
+    out=clean(out);if(!out)throw new Error('DeepSeek sent back an empty reply. Tap Regenerate.');
+    out=await maybeQuote(out,streamInto(m.id));
+    if(mode==='regen'){m.alts.push(out);m.alt=m.alts.length-1;}else{m.alts=[out];m.alt=0;}ch.updated=new Date().toISOString();
+    persist();renderChat();status('#chatStatus','');
+  }catch(e){
+    if(mode!=='regen'&&!mtext(m))ch.msgs.splice(ch.msgs.indexOf(m),1);
+    persist();renderChat();status('#chatStatus',e.name==='AbortError'?'Stopped.':e.message,e.name!=='AbortError');
+  }
+  chatBusy(false);
+}
+async function sendHer(){
+  if(busy)return;const t=$('#chatIn').value.trim();if(!t){$('#chatIn').focus();return;}
+  const ch=curChat();ch.msgs.push({id:uid(),role:'her',alts:[t],alt:0});ch.updated=new Date().toISOString();$('#chatIn').value='';autoGrow();persist();renderChat(true);
+  await genHim('reply');
+}
+async function writeForMe(){
+  if(busy)return;const c=charById(chatOpen),ch=curChat(c);const dir=$('#chatIn').value.trim();
+  const log=ch.msgs.slice(-14).map(m=>(m.role==='her'?'HER':'HIM')+':\n'+mtext(m).slice(0,5000)).join('\n\n');
+  const pov=(state.settings.chatPov||'third')==='first'?'first person, as her ("I")':'third person ("she")';
+  const prompt=`HIS CHARACTER: ${c.name}
+${(c.background||'').slice(0,20000)}
+
+HER CHARACTER (the one you write):
+${(c.herProfile||'').trim()||'Not described. Keep her consistent with how she has acted in the scene so far.'}
+
+SCENE SO FAR (oldest first):
+${log||'Nothing yet. This is her first message.'}
+
+HOW SHE SHOULD RESPOND:
+${dir||'Her choice: respond the way she naturally would, true to her character.'}
+
+Write her next message in ${pov}, about ${state.settings.chatHerLen||250} words.`;
+  chatBusy(true,'Writing her message…');const before=$('#chatIn').value;
+  try{
+    let out=await callAPI([{role:'system',content:P('reply')},{role:'user',content:prompt}],{longForm:true,maxTokens:1800,onThink:()=>status('#chatStatus','Thinking about her message…',false,true),onToken:t=>{$('#chatIn').value=t;autoGrow();}});
+    out=clean(out);out=await maybeQuote(out,t=>{$('#chatIn').value=t;});
+    $('#chatIn').value=out;autoGrow();status('#chatStatus','Her message is in the box. Edit it if you like, then tap Send.');
+  }catch(e){$('#chatIn').value=before;status('#chatStatus',e.name==='AbortError'?'Stopped.':e.message,e.name!=='AbortError');}
+  chatBusy(false);
+}
+async function changeHim(mid){
+  if(busy)return;const c=charById(chatOpen),ch=curChat(c);const m=ch.msgs.find(x=>x.id===mid);const note=($('#mfbt-'+mid).value||'').trim();
+  if(!note){$('#mfbt-'+mid).focus();return;}
+  const cur=mtext(m),him=m.role==='him';
+  const prompt=`Here is ${him?c.name+"'s":"her"} message in the roleplay:
+
+<<<MESSAGE
+${cur}
+MESSAGE>>>
+
+The writer wants these changes: ${note}
+
+Rewrite the message with only these changes; keep everything else as it is. Output only the revised message.`;
+  chatBusy(true,'Applying your changes…');
+  try{
+    let out=await callAPI([{role:'system',content:him?fillChar(P('char'),c,ch.len||300)+'\n\nCHARACTER SHEET:\n'+(c.background||'').slice(0,30000):P('reply')},{role:'user',content:prompt}],{longForm:true,maxTokens:Math.round(cur.length/3)+1500,onToken:streamInto(mid)});
+    out=clean(out.replace(/^<<<\w+\s*|\s*\w+>>>$/g,''));out=await maybeQuote(out,streamInto(mid));
+    m.alts=m.alts||[cur];m.alts.push(out);m.alt=m.alts.length-1;persist();renderChat();status('#chatStatus','Changes applied. Use ‹ › to switch back to the earlier version.');
+  }catch(e){renderChat();status('#chatStatus',e.name==='AbortError'?'Stopped.':e.message,e.name!=='AbortError');}
+  chatBusy(false);
+}
+function editMsg(mid){
+  const ch=curChat(),m=ch.msgs.find(x=>x.id===mid),el=$('#mt-'+mid);
+  el.innerHTML=`<textarea class="medit" id="me-${mid}" style="min-height:160px"></textarea><div class="fb-row"><button class="btn" data-msave="${mid}">Save</button><button class="btn quiet" data-mcancel="${mid}">Cancel</button></div>`;
+  $('#me-'+mid).value=mtext(m);$('#me-'+mid).focus();
+}
+function autoGrow(){const t=$('#chatIn');if(!t)return;t.style.height='auto';t.style.height=Math.min(t.scrollHeight,window.innerHeight*0.38)+'px';}
+function bindChat(){
+  $('#newChar').onclick=()=>openEditor(null);
+  $('#replyLink').onclick=()=>showTab('reply');
+  $('#charList').onclick=e=>{const vw=e.target.closest('[data-view]');if(vw){showTab(vw.dataset.view==='grid'?'chars':'chats');return;}const ch=e.target.closest('[data-chat]'),ed=e.target.closest('[data-edit]'),fr=e.target.closest('[data-fresh]');if(ch&&ch.dataset.cid){const c=charById(ch.dataset.chat);if(c)c.activeChat=ch.dataset.cid;}if(fr){const c=charById(fr.dataset.fresh);newChat(c);persist();openChat(c.id);status('#chatStatus','New chat started from his opening. Earlier chats are in the menu at the top.');}if(ch)openChat(ch.dataset.chat);if(ed)openEditor(ed.dataset.edit);};
+  $('#ceCancel').onclick=()=>showTab('chars');$('#ceSave').onclick=saveEditor;
+  $('#ceFile').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;try{ceAvatar=await resizeImage(f);renderCePic();}catch(x){status('#ceStatus','That picture could not be read.',true);}};
+  $('#ceNoPic').onclick=()=>{ceAvatar='';renderCePic();};
+  $('#ceBg').oninput=ceCounts;$('#ceOp').oninput=ceCounts;
+  $('#ceSplit').onclick=()=>{const t=$('#ceDoc').value;if(!t.trim()){status('#ceStatus','Paste the doc first.',true);return;}
+    if(($('#ceBg').value.trim()||$('#ceOp').value.trim())&&!confirm('Replace the current Background and Opening with the pasted doc?'))return;
+    const r=splitDoc(t);$('#ceBg').value=r.bg;$('#ceOp').value=r.op;$('#ceDoc').value='';ceCounts();
+    if(!$('#ceName').value.trim()){const nm=(r.bg.match(/(?:full name|name)\s*:\s*([^\n]+)/i)||[])[1];if(nm)$('#ceName').value=nm.replace(/[*\\]/g,'').trim().slice(0,50);}
+    status('#ceStatus',r.found?'Split done. Check both boxes, then tap Save.':'No “Intro Scene” heading found, so everything went into Background. Move the opening into the Opening box yourself.',!r.found);};
+  $('#ceDelete').onclick=()=>{const c=charById(ceId);if(c&&confirm('Delete '+c.name+' and all chats with him? This cannot be undone.')){state.characters=state.characters.filter(x=>x.id!==c.id);persist();renderChars();showTab('chars');}};
+  $('#ceToBuild').onclick=()=>{const c=charById(ceId);if(!c)return;state.build={id:c.id,prev:null,idea:c.idea||{title:c.name,name:c.name},name:c.name,tagline:c.tagline||'',background:c.background||'',opening:c.opening||''};state.replyChar='c:'+c.id;persist();renderBuild();showTab('build');};
+  $('#chatBack').onclick=()=>showTab('chats');
+  $('#chatSel').onchange=e=>{const c=charById(chatOpen);c.activeChat=e.target.value;persist();renderChat(true);};
+  $('#chatNew').onclick=()=>{if(busy)return;const c=charById(chatOpen);newChat(c);persist();renderChat(true);status('#chatStatus','New chat started. Your earlier chats are in the menu at the top.');};
+  $('#chatNew2').onclick=()=>$('#chatNew').onclick();
+  $('#chatOpts').onclick=()=>{const p=$('#chatPanel');p.style.display=p.style.display==='none'?'block':'none';};
+  $('#chatLen').onchange=e=>{curChat().len=Number(e.target.value);persist();};
+  $('#chatPov').onchange=e=>{state.settings.chatPov=e.target.value;persist();};
+  $('#chatHer').onchange=e=>{const c=charById(chatOpen);c.herProfile=e.target.value;persist();};
+  $('#chatEditChar').onclick=()=>openEditor(chatOpen);
+  $('#chatDel').onclick=()=>{const c=charById(chatOpen),ch=curChat(c);if(confirm('Delete “'+ch.title+'”? This cannot be undone.')){c.chats=c.chats.filter(x=>x.id!==ch.id);c.activeChat=null;persist();renderChat(true);}};
+  $('#chatSend').onclick=sendHer;$('#chatWrite').onclick=writeForMe;$('#chatCont').onclick=()=>genHim('continue');
+  $('#chatStop').onclick=()=>{if(controller)controller.abort();};
+  $('#msgs').onclick=async e=>{const t=e.target.closest('button');if(!t)return;const ch=curChat();const d=t.dataset;
+    if(d.mcopy){const m=ch.msgs.find(x=>x.id===d.mcopy);const ok=await copyText(mtext(m));status('#chatStatus',ok?'Copied.':'Copy failed.',!ok);setTimeout(()=>{if($('#chatStatus').textContent==='Copied.')status('#chatStatus','');},1500);}
+    if(d.more){const x=$('#mm-'+d.more);x.style.display=x.style.display==='none'?'flex':'none';return;}
+    if(d.regen)genHim('regen',d.regen);
+    if(d.mchange){const p=$('#mfb-'+d.mchange);p.style.display=p.style.display==='none'?'block':'none';if(p.style.display==='block')$('#mfbt-'+d.mchange).focus();}
+    if(d.applyfb)changeHim(d.applyfb);
+    if(d.alt){const m=ch.msgs.find(x=>x.id===d.alt);m.alt=((m.alt||0)+Number(d.d)+m.alts.length)%m.alts.length;persist();renderChat();}
+    if(d.medit&&!busy)editMsg(d.medit);
+    if(d.msave){const m=ch.msgs.find(x=>x.id===d.msave);const v=$('#me-'+d.msave).value.trim();if(v){m.alts=m.alts||[];m.alts[m.alt||0]=v;}persist();renderChat();}
+    if(d.mcancel)renderChat();
+    if(d.mdel&&!busy){const i=ch.msgs.findIndex(x=>x.id===d.mdel);if(i>=0&&confirm('Delete this message?')){ch.msgs.splice(i,1);persist();renderChat();}}
+  };
+  $('#chatIn').addEventListener('input',autoGrow);
+  $('#chatIn').addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)){e.preventDefault();sendHer();}});
+}
+
+/* ---------- saved & roster ---------- */
+function saveBuild(quiet){
+  const b=state.build;if(!b)return;state.characters=state.characters||[];
+  let c=charById(b.id);
+  if(!c){c={id:b.id,avatar:'',herProfile:'',chats:[],activeChat:null,createdAt:new Date().toISOString()};state.characters.unshift(c);}
+  Object.assign(c,{name:b.name||'Untitled',tagline:b.tagline||'',background:b.background||'',opening:b.opening||'',idea:b.idea||null});
+  persist();renderChars();if(quiet!==true)status('#buildStatus','Saved. Open Chats to add a picture and start.');
+}
+function saveCharAndRoster(quiet){saveBuild(true);addToRoster(true);if(!quiet)status('#buildStatus','Saved. '+(state.build.name||'He')+' is in Chats and your roster, ready to go.');}
+function addToRoster(quiet){
+  const b=state.build;if(!b)return;const i=b.idea||{};
+  const summary=[i.age?i.age+',':'',i.role?i.role+'.':'',i.setting||'',i.dynamic?'Dynamic: '+i.dynamic+'.':'',i.hook||''].filter(Boolean).join(' ');
+  const k=state.roster.findIndex(c=>c.id===b.id);
+  const entry={id:b.id,name:b.name,summary:summary||b.tagline,style:(b.opening||'').slice(0,1200)};
+  if(k>=0)state.roster[k]=entry;else state.roster.push(entry);
+  persist();renderRoster();if(quiet!==true)status('#buildStatus',b.name+' added to your roster. New ideas will steer away from him.');
+}
+function renderRoster(){
+  if(!state.roster.length){$('#rosterList').innerHTML='<div class="empty"><b>Your roster is empty</b>Restore your backup in Settings to bring your characters across, or tap Add a character.</div>';return;}
+  $('#rosterList').innerHTML='<div class="grid">'+state.roster.map((c,n)=>`<article class="card">
+    <div class="card-top"><input type="text" data-rf="name" data-n="${n}" value="${esc(c.name)}" aria-label="Name" style="font-weight:800;font-size:17px;border-color:transparent;background:transparent;padding-left:0"><button class="x" data-rdel="${n}" aria-label="Remove from roster">×</button></div>
+    <div><label style="margin-top:0">Summary</label><textarea data-rf="summary" data-n="${n}" style="min-height:150px">${esc(c.summary)}</textarea></div>
+    <details class="more"><summary>Style excerpt ${c.style&&c.style.trim()?'(used)':'(none)'}</summary>
+      <textarea data-rf="style" data-n="${n}" style="min-height:180px;margin-top:10px" placeholder="Paste a passage from this character's intro scene">${esc(c.style)}</textarea></details>
+  </article>`).join('')+'</div>';
+}
+
+/* ---------- UI plumbing ---------- */
+function status(sel,msg,err,load){const el=$(sel);el.textContent=msg||'';el.classList.toggle('err',!!err);el.classList.toggle('loading',!!load&&!!msg);}
+function setBusy(v){busy=v;document.querySelectorAll('#genBtn,#genMore,#buildBtn,#reBg,#reOpen,#replyBtn,#reviseReply,#redoReply,#chatSend,#chatWrite,#chatCont,#chatNew,#chatNew2,[data-regen],[data-applyfb],[data-revise],[data-build],[data-more]').forEach(b=>b.disabled=v);$('#chatStop').style.display=v&&$('#tab-chat').classList.contains('on')?'inline-block':'none';$('#stopBtn').style.display=v?'block':'none';$('#replyStop').style.display=v&&$('#tab-reply').classList.contains('on')?'block':'none';}
+function showTab(t){if(t==='reply')renderReply();if(t==='chars'||t==='chats'){charView=t==='chars'?'grid':'list';renderChars();}const nav=t==='chat'?'chats':t==='charedit'?'chars':t;const sec=t==='chats'?'chars':t;document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('on',b.dataset.tab===nav));document.querySelectorAll('main section').forEach(s=>s.classList.toggle('on',s.id==='tab-'+sec));window.scrollTo(0,0);}
+function chips(id,groups,key){const el=$(id);const sel=state.inputs[key];
+  el.innerHTML=Object.entries(groups).map(([g,list])=>`<div class="grp"><div class="grp-label">${esc(g)}</div><div class="chips">${list.map(x=>`<button class="chip${sel.includes(x)?' on':''}" data-chip="${esc(x)}" aria-pressed="${sel.includes(x)}">${esc(x)}</button>`).join('')}</div></div>`).join('');
+  el.onclick=e=>{const c=e.target.closest('[data-chip]');if(!c)return;const v=c.dataset.chip,a=state.inputs[key],k=a.indexOf(v);if(k>=0)a.splice(k,1);else a.push(v);persist();renderChips();};}
+function renderPicked(){const I=state.inputs;const all=[...I.genres.map(v=>['genres',v]),...I.dyn.map(v=>['dyn',v]),...I.traits.map(v=>['traits',v])];
+  $('#picked').innerHTML=all.length?'<span class="lbl">Picked</span>'+all.map(([k,v])=>`<span class="pill">${esc(v)}<button data-unpick="${k}" data-v="${esc(v)}" aria-label="Remove ${esc(v)}">×</button></span>`).join(''):'<span class="lbl">Nothing picked yet. Choose below, or tap Surprise me.</span>';
+  const n=(a,id)=>{$(id).textContent=a.length?a.length:'';};n(I.genres,'#n-genre');n(I.dyn,'#n-tropes');n(I.traits,'#n-traits');}
+function renderChips(){chips('#genreChips',GENRES,'genres');chips('#dynChips',DYNAMICS,'dyn');chips('#traitChips',TRAITS,'traits');renderPicked();}
+function pick(groups,n){const keys=Object.keys(groups).sort(()=>Math.random()-.5);const out=[];let i=0;while(out.length<n&&i<50){const g=groups[keys[i%keys.length]];const x=g[Math.floor(Math.random()*g.length)];if(!out.includes(x))out.push(x);i++;}return out;}
+function rnd(a,b){return a+Math.floor(Math.random()*(b-a+1));}
+async function copyText(t){try{await navigator.clipboard.writeText(t);return true;}catch(e){const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();let ok=false;try{ok=document.execCommand('copy');}catch(x){}ta.remove();return ok;}}
+
+PROMPT_DEFAULTS.base=SYSTEM_BASE;PROMPT_DEFAULTS.style=STYLE_NOTES;PROMPT_DEFAULTS.reply=REPLY_SYSTEM;PROMPT_DEFAULTS.char=CHAR_SYSTEM;
+function renderPrompts(){for(const k of ['base','style','reply','char'])$('#pr-'+k).value=P(k);}
+function init(){
+  const I=state.inputs;
+  I.traits=I.traits||[];I.kinks=I.kinks||'';renderChips();$('#kinks').value=I.kinks;
+  $('#surpriseBtn').onclick=()=>{I.genres=pick(GENRES,rnd(2,3));I.dyn=pick(DYNAMICS,rnd(3,4));I.traits=pick(TRAITS,rnd(2,3));persist();renderChips();status('#ideaStatus','Picked '+I.genres.length+' genres, '+I.dyn.length+' tropes and '+I.traits.length+' personality traits. Tap Surprise me again to reshuffle.');};
+  $('#clearPicks').onclick=()=>{I.genres=[];I.dyn=[];I.traits=[];persist();renderChips();};
+  $('#genreFree').value=I.genreFree||'';$('#arch').value=I.arch||'';$('#her').value=I.her||'';$('#heat').value=I.heat||'explicit';$('#avoid').value=I.avoid||'';$('#count').value=String(I.n||3);$('#avoidRoster').checked=I.avoidRoster!==false;
+  $('#apiKey').value=state.settings.apiKey||'';$('#model').value=state.settings.model||'deepseek-v4-flash';if(!(state.settings.temp<=1))state.settings.temp=0.8;if(!state.settings.mode)state.settings.mode='stable';$('#mode').value=state.settings.mode;$('#mode').onchange=e=>{state.settings.mode=e.target.value;persist();$('#tempWrap').style.display=e.target.value==='fast'?'block':'none';};$('#tempWrap').style.display=state.settings.mode==='fast'?'block':'none';$('#temp').value=state.settings.temp;$('#tempVal').textContent=$('#temp').value;
+  state.dislikes=state.dislikes||[];renderIdeas();renderBuild();migrateChars();renderChars();bindChat();renderRoster();renderDislikes();
+  $('#dislikeList').onclick=e=>{const b=e.target.closest('[data-undl]');if(b){state.dislikes.splice(+b.dataset.undl,1);persist();renderDislikes();}};
+
+  document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
+  $('#gearBtn').onclick=()=>showTab($('#tab-settings').classList.contains('on')?'create':'settings');
+  document.querySelectorAll('[data-ptab]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-ptab]').forEach(x=>x.classList.toggle('on',x===b));document.querySelectorAll('.panelx').forEach(p=>p.classList.toggle('on',p.id==='p-'+b.dataset.ptab));});
+  $('#picked').onclick=e=>{const b=e.target.closest('[data-unpick]');if(!b)return;const a=I[b.dataset.unpick],k=a.indexOf(b.dataset.v);if(k>=0)a.splice(k,1);persist();renderChips();};
+  document.querySelectorAll('[data-filter]').forEach(b=>b.onclick=()=>{ideaFilter=b.dataset.filter;document.querySelectorAll('[data-filter]').forEach(x=>x.classList.toggle('on',x===b));renderIdeas();});
+  $('#genMore').onclick=()=>genIdeas(null);
+  $('#vibe').value=I.vibe||'';$('#vibe').onchange=()=>{I.vibe=$('#vibe').value;persist();};
+  const modelInfo=()=>{$('#modelName').textContent=state.settings.model||'deepseek-v4-flash';$('#modelMode').textContent=(state.settings.mode==='fast'?'Fast':'Stable')+' mode'+(state.settings.apiKey?' · key saved':' · no key yet');};modelInfo();
+  ['#model','#mode','#apiKey'].forEach(id=>$(id).addEventListener('change',()=>setTimeout(modelInfo)));
+  $('#genBtn').onclick=()=>genIdeas(null);
+  const byId=id=>state.ideas.find(x=>x.id===id);
+  $('#ideaList').onclick=e=>{const b=e.target.closest('[data-build]'),m=e.target.closest('[data-more]'),d=e.target.closest('[data-dismiss]'),r=e.target.closest('[data-reject]');
+    if(b)startBuild(byId(b.dataset.build));
+    if(m)genIdeas(byId(m.dataset.more));
+    if(d){const z=$('#dz-'+d.dataset.dismiss);z.style.display=z.style.display==='none'?'block':'none';}
+    if(r){const id=r.dataset.reject,i=byId(id);if(!i)return;
+      if(r.dataset.kind==='no'){const note=$('#dn-'+id).value.trim();state.dislikes.push({title:i.title,summary:[i.role,i.setting].filter(Boolean).join(', ').slice(0,160),note});}
+      state.ideas=state.ideas.filter(x=>x.id!==id);persist();renderIdeas();renderDislikes();}};
+  $('#clearIdeas').onclick=()=>{if(state.ideas.length&&confirm('Remove all ideas from the Ideas tab? Saved characters are not affected.')){state.ideas=[];persist();renderIdeas();}};
+  state.chats=state.chats||{};state.settings.prompts=state.settings.prompts||{};renderPrompts();
+  document.querySelectorAll('[data-prompt]').forEach(t=>t.onchange=()=>{const k=t.dataset.prompt;state.settings.prompts[k]=t.value===PROMPT_DEFAULTS[k]?'':t.value;persist();status('#setStatus','Instructions saved.');});
+  document.querySelectorAll('[data-preset]').forEach(b=>b.onclick=()=>{const k=b.dataset.preset;if(confirm('Put back the original instructions for this box?')){state.settings.prompts[k]='';persist();renderPrompts();status('#setStatus','Original instructions restored.');}});
+  renderReply();
+  $('#chatQuote').checked=state.settings.chatQuote!==false;$('#chatQuote').onchange=e=>{state.settings.chatQuote=e.target.checked;persist();};
+  $('#replyChar').onchange=e=>{state.replyChar=e.target.value;$('#herOut').value='';persist();renderReply();};
+  $('#herProfile').onchange=()=>{const ch=chat();if(ch){ch.herProfile=$('#herProfile').value;persist();}};
+  $('#replyBtn').onclick=()=>writeReply('new');
+  $('#redoReply').onclick=()=>writeReply('redo');
+  $('#reviseReply').onclick=reviseReply;
+  $('#replyStop').onclick=()=>{if(controller)controller.abort();};
+  $('#herOut').addEventListener('input',countReply);
+  $('#herOut').onchange=()=>{const ch=chat();if(!ch)return;const t=$('#herOut').value;const l=ch.log;if(l.length&&l[l.length-1].who==='her')l[l.length-1].text=t;persist();};
+  $('#copyReply').onclick=async()=>{const ok=await copyText($('#herOut').value);$('#copyReply').textContent=ok?'Copied':'Copy failed';setTimeout(()=>$('#copyReply').textContent='Copy',1500);};
+  $('#clearScene').onclick=()=>{const ch=chat();if(ch&&ch.log.length&&confirm('Clear the scene so far for this character? Your character description is kept.')){ch.log=[];$('#herOut').value='';persist();renderReply();}};
+  $('#buildBtn').onclick=()=>run([buildBackground,buildOpening]);
+  $('#reBg').onclick=()=>run([buildBackground]);
+  $('#reOpen').onclick=()=>run([buildOpening]);
+  document.querySelectorAll('[data-revise]').forEach(x=>x.onclick=()=>{if(!busy)reviseField(x.dataset.revise);});
+  document.querySelectorAll('[data-undo]').forEach(x=>x.onclick=()=>undoField(x.dataset.undo));
+  $('#stopBtn').onclick=()=>{if(controller)controller.abort();};
+  for(const f of ['name','tagline','background','opening']){$('#f-'+f).addEventListener('input',e=>{if(state.build){state.build[f]=e.target.value;count(f);}});$('#f-'+f).addEventListener('change',persist);}
+  document.querySelectorAll('[data-copy]').forEach(b=>b.onclick=async()=>{const ok=await copyText($('#f-'+b.dataset.copy).value);b.textContent=ok?'Copied':'Copy failed';setTimeout(()=>b.textContent='Copy',1500);});
+  $('#saveBuild').onclick=()=>saveCharAndRoster(false);
+  $('#rosterList').addEventListener('change',e=>{const t=e.target;if(t.dataset.rf){state.roster[+t.dataset.n][t.dataset.rf]=t.value;persist();}});
+  $('#rosterList').onclick=e=>{const d=e.target.closest('[data-rdel]');if(d&&confirm('Remove '+state.roster[+d.dataset.rdel].name+' from the roster?')){state.roster.splice(+d.dataset.rdel,1);persist();renderRoster();}};
+  $('#addChar').onclick=()=>{state.roster.push({id:uid(),name:'New character',summary:'',style:''});persist();renderRoster();};
+  $('#apiKey').onchange=e=>{state.settings.apiKey=e.target.value.trim();persist();status('#setStatus','Key saved.');};
+  $('#showKey').onclick=()=>{const k=$('#apiKey');k.type=k.type==='password'?'text':'password';$('#showKey').textContent=k.type==='password'?'Show':'Hide';};
+  $('#model').onchange=e=>{state.settings.model=e.target.value;persist();};
+  $('#temp').oninput=e=>{state.settings.temp=Number(e.target.value);$('#tempVal').textContent=e.target.value;persist();};
+  $('#exportBtn').onclick=()=>{const data=JSON.parse(JSON.stringify(state));data.settings.apiKey='';const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));a.download='oc-generator-backup.json';document.body.appendChild(a);a.click();a.remove();status('#setStatus','Backup downloaded (your API key is not included).');};
+  $('#importBtn').onclick=()=>$('#importFile').click();
+  $('#importFile').onchange=async e=>{const f=e.target.files[0];if(!f)return;e.target.value='';try{const d=JSON.parse(await f.text());
+    if(d.type==='oc-studio-roster'){const have=new Set(state.roster.map(c=>(c.name||'').trim().toLowerCase()));let n=0;for(const c of d.roster||[]){if(!have.has((c.name||'').trim().toLowerCase())){state.roster.push(Object.assign({},c,{id:c.id&&!state.roster.some(r=>r.id===c.id)?c.id:uid()}));n++;}}persist();renderRoster();status('#setStatus',n?'Added '+n+' character'+(n===1?'':'s')+' to your roster. Characters you already had were left as they are.':'Your roster already has all of these characters.');return;}
+    const key=state.settings.apiKey;for(const k of KEYS){if(d[k]!=null)state[k]=d[k];}state.settings.apiKey=key;await flush();location.reload();}catch(x){status('#setStatus','That file could not be read.',true);}};
+}
+(async()=>{await load();init();})();
+if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost')){
+  const hadSW=!!navigator.serviceWorker.controller;let reloaded=false;
+  navigator.serviceWorker.addEventListener('controllerchange',()=>{if(hadSW&&!reloaded){reloaded=true;flush().then(()=>location.reload());}});
+  navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>{r.update();document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')r.update();});}).catch(()=>{});
+}
+</script>
+</body>
+</html>
