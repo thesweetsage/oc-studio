@@ -380,7 +380,7 @@ input[type=range]{width:100%;accent-color:var(--accent)}
   </div>
   <div class="panel">
     <div class="eyebrow">Backup</div>
-    <div class="actions"><button class="btn ghost" id="exportBtn">Back up everything</button><button class="btn ghost" id="importBtn">Restore from backup</button></div>
+    <div class="actions"><button class="btn ghost" id="exportBtn">Back up everything</button><button class="btn ghost" id="importBtn">Restore backup or add characters</button></div>
     <input type="file" id="importFile" accept=".json,application/json" style="display:none">
   </div>
   <div class="status" id="setStatus"></div>
@@ -1044,7 +1044,9 @@ function init(){
   $('#temp').oninput=e=>{state.settings.temp=Number(e.target.value);$('#tempVal').textContent=e.target.value;persist();};
   $('#exportBtn').onclick=()=>{const data=JSON.parse(JSON.stringify(state));data.settings.apiKey='';const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));a.download='oc-generator-backup.json';document.body.appendChild(a);a.click();a.remove();status('#setStatus','Backup downloaded (your API key is not included).');};
   $('#importBtn').onclick=()=>$('#importFile').click();
-  $('#importFile').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const d=JSON.parse(await f.text());const key=state.settings.apiKey;for(const k of ['roster','ideas','saved','build','inputs','settings']){if(d[k]!=null)state[k]=d[k];}state.settings.apiKey=key;persist();location.reload();}catch(x){status('#setStatus','That file could not be read.',true);}};
+  $('#importFile').onchange=async e=>{const f=e.target.files[0];if(!f)return;e.target.value='';try{const d=JSON.parse(await f.text());
+    if(d.type==='oc-studio-roster'){const have=new Set(state.roster.map(c=>(c.name||'').trim().toLowerCase()));let n=0;for(const c of d.roster||[]){if(!have.has((c.name||'').trim().toLowerCase())){state.roster.push(Object.assign({},c,{id:c.id&&!state.roster.some(r=>r.id===c.id)?c.id:uid()}));n++;}}persist();renderRoster();status('#setStatus',n?'Added '+n+' character'+(n===1?'':'s')+' to your roster. Characters you already had were left as they are.':'Your roster already has all of these characters.');return;}
+    const key=state.settings.apiKey;for(const k of ['roster','ideas','saved','build','inputs','settings','dislikes','chats','replyChar']){if(d[k]!=null)state[k]=d[k];}state.settings.apiKey=key;persist();location.reload();}catch(x){status('#setStatus','That file could not be read.',true);}};
 }
 init();
 if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost'))navigator.serviceWorker.register('sw.js').catch(()=>{});
