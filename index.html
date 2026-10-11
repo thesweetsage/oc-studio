@@ -10,13 +10,13 @@
 <link rel="apple-touch-icon" href="icon-192.png">
 <meta name="mobile-web-app-capable" content="yes">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#0b0b0d;--side:#0e0e11;--panel:#141418;--panel2:#1b1b21;--input:#101014;
-  --line:#24242b;--line2:#2e2e37;--text:#f2f1f4;--soft:#d6d4dc;--muted:#8d8a96;--faint:#5f5c68;
-  --accent:#ff5c86;--accent-ink:#0b0b0d;--accent-soft:rgba(255,92,134,.14);--accent-line:rgba(255,92,134,.45);--err:#ff7a6e;
-  --font:Manrope,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --bg:#07070b;--side:#0a0a10;--panel:#111118;--panel2:#16161f;--input:#0d0d13;
+  --line:#1c1c27;--line2:#262633;--text:#ecebf3;--soft:#c9c6da;--muted:#8b88a0;--faint:#5d5a70;
+  --accent:#ff4f8b;--accent2:#a855f7;--grad:linear-gradient(135deg,#ff4f8b,#a855f7);--accent-ink:#fff;--accent-soft:rgba(168,85,247,.14);--accent-line:rgba(198,165,255,.42);--err:#ff7a8e;
+  --font:Sora,system-ui,-apple-system,"Segoe UI",sans-serif;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 var(--font)}
@@ -181,6 +181,142 @@ input[type=range]{width:100%;accent-color:var(--accent)}
   .head .actions{width:100%}
   .head .actions .btn{flex:1}
 }
+.btn.danger{color:#ff8a7e;border-color:#5a2a2a}
+.char-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:18px}
+.char-card{background:var(--panel);border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column}
+.char-pic{display:block;padding:0;border:none;background:var(--panel2);aspect-ratio:3/4;cursor:pointer;width:100%}
+.cimg{width:100%;height:100%;object-fit:cover;display:block}
+.noimg{display:grid;place-items:center;background:linear-gradient(160deg,#2a1520,#141418);color:var(--accent);font-weight:800}
+.cimg.noimg{font-size:48px;height:100%}
+.char-info{padding:14px 16px 0}.char-info h2{margin:0;font-size:19px;font-weight:800;letter-spacing:-.3px}
+.char-info p{margin:6px 0 0;font-size:13px;color:var(--soft);line-height:1.45;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.char-info .meta{font-size:12px;margin-top:8px}
+.char-card .card-actions{padding:14px 16px 16px;flex-wrap:wrap}.char-card .card-actions .btn{padding:0 10px}
+.ce-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);gap:18px;align-items:start}
+.ce-grid .panel{margin-bottom:16px}
+.ce-pic{aspect-ratio:3/4;border-radius:14px;background:var(--panel2);border:1px dashed var(--line2);display:grid;place-items:center;overflow:hidden;color:var(--faint);font-size:13px;max-width:320px}
+.ce-pic img{width:100%;height:100%;object-fit:cover}
+.chat-head{display:flex;align-items:center;gap:12px;padding:4px 0 14px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg);z-index:4}
+.chat-av{width:44px;height:44px;flex:0 0 44px}
+.hav{width:44px;height:44px;border-radius:12px;object-fit:cover}.hav.noimg{font-size:15px}
+.chat-title{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+.chat-title b{font-size:17px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chat-title select{padding:5px 30px 5px 10px;font-size:12px;border-radius:9px;max-width:320px}
+.chat-head .btn{height:40px;padding:0 14px}
+.chat-panel{margin-top:14px}
+.msgs{display:flex;flex-direction:column;gap:20px;padding:20px 0 12px;max-width:860px}
+.msg{display:flex;gap:12px;align-items:flex-start}
+.msg.her{flex-direction:row-reverse}
+.mav{width:40px;height:40px;border-radius:11px;object-fit:cover;flex:0 0 40px}.mav.noimg{font-size:14px}
+.mbody{flex:1;min-width:0;max-width:720px}
+.msg.her .mbody{background:var(--panel2);border:1px solid var(--line);border-radius:16px 4px 16px 16px;padding:12px 16px}
+.msg.him .mbody{background:var(--panel);border:1px solid var(--line);border-radius:4px 16px 16px 16px;padding:12px 16px}
+.mname{font-size:11px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.msg.him .mname{color:var(--accent)}
+.mtext{font-size:15.5px;line-height:1.65;color:var(--text)}
+.mtext p{margin:0 0 .8em}.mtext p:last-child{margin-bottom:0}
+.mtools{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px;align-items:center}
+.mtools button{background:none;border:1px solid transparent;color:var(--muted);font:600 12px var(--font);padding:5px 9px;border-radius:8px;cursor:pointer}
+.mtools button:hover{border-color:var(--line2);color:var(--text)}
+.alts{display:inline-flex;align-items:center;gap:2px;font-size:12px;color:var(--soft);margin-right:6px}
+.alts button{padding:3px 8px;font-size:15px}
+.mfb{margin-top:10px}.mfb textarea{min-height:70px}
+.medit{width:100%}
+.composer{position:sticky;bottom:0;background:linear-gradient(180deg,rgba(11,11,13,0),var(--bg) 18px);padding:18px 0 12px;max-width:860px;z-index:3}
+.composer textarea{min-height:90px;max-height:40vh}
+.comp-row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.comp-row .btn{flex:1 1 auto}
+#tab-chat .status{margin-top:8px}
+@media (max-width:1100px){.ce-grid{grid-template-columns:1fr}}
+@media (max-width:860px){.char-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.char-info h2{font-size:16px}.char-card .card-actions{flex-direction:column}.char-card .card-actions .btn{flex:none;height:40px}.chat-head{top:58px}
+  .composer{bottom:calc(62px + env(safe-area-inset-bottom))}.chat-head .btn{display:none}.msg.her .mbody,.msg.him .mbody{padding:10px 13px}.mav{display:none}}
+
+/* ===== Pulse theme ===== */
+body{background:var(--bg)}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(520px 420px at 8% -6%,rgba(168,85,247,.16),transparent 70%),radial-gradient(520px 420px at 105% 0%,rgba(255,79,139,.12),transparent 70%)}
+.app,.bottombar{position:relative;z-index:1}
+.logo .mark{background:var(--grad);color:#fff;border-radius:10px}
+.nav button.on{background:linear-gradient(90deg,rgba(255,79,139,.14),rgba(168,85,247,.10));color:var(--text)}
+.nav button.on svg{color:#ff7aa6}
+.nav .badge,.bottombar .badge{background:var(--grad);color:#fff}
+.btn{background:var(--grad);color:#fff;box-shadow:0 8px 24px rgba(168,85,247,.22)}
+.btn.light{background:var(--text);color:var(--bg);box-shadow:none}
+.btn.ghost,.btn.quiet{box-shadow:none}
+.btn.ghost{background:var(--panel2);border-color:var(--line2)}
+.chip.on{background:var(--grad);border-color:transparent;color:#fff}
+.tabs button.on,.filter button.on{border-image:var(--grad) 1;border-bottom-width:2px}
+.tabs .n{color:#d5b8ff}
+.pill{background:rgba(168,85,247,.14);border-color:rgba(198,165,255,.38)}
+.tagline-s{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.card,.panel,.compose,.opts{background:var(--panel);border-color:var(--line);border-radius:20px}
+input:focus,textarea:focus,select:focus{border-color:#b98cff}
+h1{letter-spacing:-1.2px}
+.sr{position:absolute;left:-9999px}
+@media (max-width:860px){
+  .bottombar{background:rgba(10,10,15,.95);border-top-color:#16161f}
+  .bottombar button.on{color:var(--text)}
+  .bottombar button.on::before{content:"";position:absolute;top:0;left:50%;transform:translateX(-50%);width:34px;height:3px;border-radius:2px;background:var(--grad)}
+  .bottombar button.on svg{color:#ff7aa6}
+  .topbar{background:rgba(7,7,11,.92)}
+}
+/* chats list */
+.sec-label{font-size:11px;letter-spacing:1.6px;color:var(--faint);font-weight:600;margin:6px 0 12px}
+.story-row{display:flex;gap:16px;overflow-x:auto;padding-bottom:6px;margin-bottom:26px;scrollbar-width:none}
+.story{display:flex;flex-direction:column;align-items:center;gap:7px;background:none;border:none;color:var(--soft);font:500 12px var(--font);cursor:pointer;flex:0 0 auto;width:70px}
+.story .ring{width:66px;height:66px;border-radius:50%;padding:2px;background:var(--grad)}
+.story .ring.dim{background:var(--line2)}
+.story .ring>*,.story .ring .sav{width:100%;height:100%;border-radius:50%;border:2.5px solid var(--bg);object-fit:cover;box-sizing:border-box;font-size:18px}
+.story .plus{width:66px;height:66px;border-radius:50%;border:1.5px dashed #34344a;display:grid;place-items:center;color:var(--muted);font-size:22px}
+.story span.nm{max-width:70px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.clist{display:flex;flex-direction:column;max-width:860px}
+.crow{display:grid;grid-template-columns:58px minmax(0,1fr) auto;gap:14px;align-items:center;padding:12px 4px;border-bottom:1px solid #14141c;background:none;border-left:none;border-right:none;border-top:none;color:var(--text);text-align:left;font-family:var(--font);cursor:pointer;width:100%}
+.crow:hover{background:rgba(255,255,255,.02)}
+.crow .av{width:58px;height:58px;border-radius:19px;object-fit:cover;font-size:18px}
+.crow b{font-size:15.5px;font-weight:600}.crow b small{font-size:11.5px;font-weight:400;color:#c6a5ff;margin-left:4px}
+.crow .prev{font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:3px}
+.crow .when{display:flex;flex-direction:column;align-items:flex-end;gap:6px;font-size:11.5px;color:var(--faint)}
+.viewall{display:flex;justify-content:space-between;align-items:center;margin:0 0 14px}
+.noimg{background:radial-gradient(80% 70% at 50% 30%,#3a2c4a,#121019);color:#e2c9ff}
+/* chat */
+.chat-head{background:rgba(7,7,11,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom-color:#16161f}
+.chat-av{width:46px;height:46px;flex:0 0 46px;border-radius:50%;padding:2px;background:var(--grad)}
+.chat-av>*{width:100%;height:100%;border-radius:50%;border:2px solid var(--bg);box-sizing:border-box;object-fit:cover}
+.hav.noimg{font-size:14px}
+.chat-title b{font-weight:600}
+#chatSub{font-size:12px;color:#c6a5ff}
+.msgs{gap:16px}
+.msg.him .mbody{background:#13131b;border:1px solid #1f1f2a;border-radius:6px 22px 22px 22px;padding:14px 17px}
+.msg.her .mbody{background:var(--grad);border:none;border-radius:22px 22px 6px 22px;padding:12px 16px;color:#fff}
+.msg.her{padding-left:12%}
+.msg.him{padding-right:6%}
+.msg.her .mname{display:none}
+.mname{color:#c6a5ff !important;letter-spacing:.4px;text-transform:none;font-weight:600;font-size:12.5px}
+.mtext{font-size:15px;line-height:1.65;color:#b9b6c9}
+.msg.her .mtext{color:rgba(255,255,255,.92)}
+.mtext b.dlg{color:#fff;font-weight:600}
+.mav{border-radius:50%}
+.tbar{display:inline-flex;align-items:center;gap:2px;margin-top:10px;padding:4px;border-radius:999px;background:#0e0e15;border:1px solid #1f1f2a}
+.msg.her .tbar{background:rgba(0,0,0,.18);border-color:rgba(255,255,255,.18)}
+.tbar button{width:36px;height:32px;border-radius:999px;border:none;background:transparent;color:var(--text);display:grid;place-items:center;cursor:pointer;font:600 12px var(--font)}
+.tbar button:hover{background:rgba(255,255,255,.07)}
+.tbar .alts{display:inline-flex;align-items:center;gap:0;padding:0 6px;font-size:12px;color:var(--soft)}
+.tbar .alts button{width:24px}
+.mmore{margin-top:8px;display:flex;flex-wrap:wrap;gap:6px}
+.mmore button{background:#0e0e15;border:1px solid #1f1f2a;color:var(--soft);border-radius:999px;padding:6px 12px;font:500 12px var(--font);cursor:pointer}
+.msg.her .mmore button{background:rgba(0,0,0,.2);border-color:rgba(255,255,255,.2);color:#fff}
+.dots{background:none;border:none;color:var(--faint);cursor:pointer;font-size:18px;line-height:1;padding:2px 6px;margin-top:6px}
+.msg.her .dots{color:rgba(255,255,255,.75)}
+.composer{background:linear-gradient(180deg,rgba(7,7,11,0),var(--bg) 22px)}
+.comp-chips{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.chipbtn{height:34px;padding:0 14px;border-radius:999px;border:1px solid #22222d;background:#101017;color:var(--text);font:500 12.5px var(--font);cursor:pointer}
+.chipbtn.magic{border-color:#2c2140;background:#150f22;color:#d2c6ff}
+.chipbtn:disabled{opacity:.45}
+.comp-pill{display:flex;align-items:flex-end;gap:10px;padding:7px 7px 7px 18px;border-radius:28px;background:#13131b;border:1px solid #22222d}
+.comp-pill textarea{flex:1;min-height:40px;max-height:38vh;border:none;background:transparent;padding:9px 0;resize:none;font-size:15px;line-height:1.45}
+.comp-pill textarea:focus{border:none}
+.sendbtn{width:42px;height:42px;flex:0 0 42px;border-radius:50%;border:none;background:var(--grad);color:#fff;display:grid;place-items:center;cursor:pointer;box-shadow:0 6px 18px rgba(168,85,247,.35)}
+.sendbtn:disabled{opacity:.45}
+@media (max-width:860px){.msg.her{padding-left:8%}.msg.him{padding-right:0}}
 </style>
 </head>
 <body>
@@ -191,7 +327,7 @@ input[type=range]{width:100%;accent-color:var(--accent)}
     <button data-tab="create" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.8 4.6L18.5 9l-4.7 1.4L12 15l-1.8-4.6L5.5 9l4.7-1.4z"/></svg>Create</button>
     <button data-tab="ideas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="13" height="16" rx="2"/><path d="M19 7v12a2 2 0 0 1-2 2H8"/></svg>Ideas<span class="badge" data-ideacount style="display:none"></span></button>
     <button data-tab="build"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>Build</button>
-    <button data-tab="saved"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>Saved</button>
+    <button data-tab="chars"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Chats</button>
     <button data-tab="reply"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M8 9h8M8 13h5"/></svg>Reply</button>
     <button data-tab="roster"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="7" r="4"/><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/></svg>Roster</button>
   </nav>
@@ -257,7 +393,7 @@ input[type=range]{width:100%;accent-color:var(--accent)}
   <div id="buildEmpty"><div class="head"><div><div class="kicker">Turn an idea into a Tipsy character</div><h1>Build</h1></div></div><div class="empty"><b>Nothing on the table yet</b>Open Ideas and tap Build on one you like.</div></div>
   <div id="buildArea" style="display:none">
     <div class="head"><div><div class="kicker">Turn an idea into a Tipsy character</div><h1>Build</h1></div>
-      <div class="actions"><button class="btn ghost" id="toRoster">Add to roster</button><button class="btn light" id="saveBuild">Save</button></div></div>
+      <div class="actions"><button class="btn light" id="saveBuild">Save</button></div></div>
     <div class="build-top">
       <div class="card" id="buildIdea"></div>
       <div class="opts">
@@ -293,10 +429,92 @@ input[type=range]{width:100%;accent-color:var(--accent)}
   </div>
 </section>
 
-<section id="tab-saved">
-  <div class="head"><div><div class="kicker">Characters you've kept</div><h1>Saved</h1></div></div>
-  <div id="savedList"></div>
+<section id="tab-chars">
+  <div class="head"><div><div class="kicker" id="charsKicker">Your characters</div><h1 id="charsTitle">Chats</h1></div>
+    <div class="actions"><button class="btn" id="newChar">New character</button></div></div>
+  <div id="charList"></div>
 </section>
+
+<section id="tab-charedit">
+  <div class="head"><div><div class="kicker">Picture, character sheet and opening</div><h1 id="ceTitle">New character</h1></div>
+    <div class="actions"><button class="btn quiet" id="ceCancel">Cancel</button><button class="btn light" id="ceSave">Save</button></div></div>
+  <div class="ce-grid">
+    <div>
+      <div class="panel">
+        <div class="eyebrow">Picture</div>
+        <div class="ce-pic" id="cePic"><span>No picture yet</span></div>
+        <div class="fb-row" style="margin-top:12px">
+          <label class="btn ghost" for="ceFile" style="display:flex;align-items:center;justify-content:center;margin:0">Choose picture</label>
+          <button class="btn quiet" id="ceNoPic">Remove</button>
+        </div>
+        <input type="file" id="ceFile" accept="image/*" style="display:none">
+      </div>
+      <div class="panel">
+        <label for="ceName" style="margin-top:0">Name</label>
+        <input type="text" id="ceName" placeholder="His name">
+        <label for="ceTag">Tagline</label>
+        <textarea id="ceTag" style="min-height:70px" placeholder="One line for his card"></textarea>
+        <label for="ceHer">Your character in his story</label>
+        <textarea id="ceHer" style="min-height:120px" placeholder="Name, age, looks, personality… Used when he replies and when you tap Write for me."></textarea>
+      </div>
+    </div>
+    <div>
+      <div class="panel">
+        <div class="eyebrow">Paste the whole Google Doc (optional)</div>
+        <p class="small" style="margin-top:0">Open his doc, select all, copy, and paste it here. The app splits it at the “Intro Scene” heading into Background and Opening.</p>
+        <textarea id="ceDoc" style="min-height:110px" placeholder="Paste the full doc here…"></textarea>
+        <button class="btn ghost wide" id="ceSplit" style="margin-top:10px">Split into Background and Opening</button>
+        <div class="status" id="ceStatus"></div>
+      </div>
+      <div class="panel">
+        <div class="field-h"><span class="t">Background (his character sheet)</span><span class="count" id="ceBgCount"></span></div>
+        <textarea id="ceBg" class="out" style="min-height:320px"></textarea>
+        <div class="field-h" style="margin-top:16px"><span class="t">Opening (his first message)</span><span class="count" id="ceOpCount"></span></div>
+        <textarea id="ceOp" class="out" style="min-height:240px"></textarea>
+      </div>
+      <div class="actions" style="justify-content:space-between">
+        <button class="btn quiet" id="ceToBuild">Open in Build</button>
+        <button class="btn quiet danger" id="ceDelete">Delete character</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="tab-chat">
+  <div class="chat-head">
+    <button class="x" id="chatBack" aria-label="Back to characters">‹</button>
+    <div class="chat-av" id="chatAv"></div>
+    <div class="chat-title"><b id="chatName"></b><span id="chatSub"></span></div>
+    <button class="x" id="chatNew" aria-label="New chat from the opening" title="New chat from the opening"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/></svg></button>
+    <button class="x" id="chatOpts" aria-label="Chat settings"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+  </div>
+  <div class="panel chat-panel" id="chatPanel" style="display:none">
+    <label for="chatSel" style="margin-top:0">Conversation</label>
+    <select id="chatSel"></select>
+    <div class="form-grid" style="margin-top:6px">
+      <div><label style="margin-top:0">His reply length</label><select id="chatLen"><option value="150">Short</option><option value="300">Medium</option><option value="550">Long</option><option value="900">Very long</option></select></div>
+      <div><label style="margin-top:0">Your replies (Write for me)</label><select id="chatPov"><option value="third">Third person (she…)</option><option value="first">First person (I…)</option></select></div>
+    </div>
+    <label for="chatHer">Your character in his story</label>
+    <textarea id="chatHer" style="min-height:100px" placeholder="Name, age, looks, personality…"></textarea>
+    <div class="actions" style="margin-top:12px"><button class="btn ghost" id="chatNew2">New chat</button><button class="btn quiet" id="chatEditChar">Edit character</button><button class="btn quiet danger" id="chatDel">Delete this chat</button></div>
+  </div>
+  <div id="msgs" class="msgs"></div>
+  <div class="composer">
+    <div class="comp-chips">
+      <button class="chipbtn magic" id="chatWrite">✦ Write for me</button>
+      <button class="chipbtn" id="chatCont">He continues</button>
+      <button class="chipbtn" id="chatStop" style="display:none">Stop</button>
+    </div>
+    <div class="comp-pill">
+      <label for="chatIn" class="sr">Your message</label>
+      <textarea id="chatIn" rows="1" placeholder="Her move…"></textarea>
+      <button class="sendbtn" id="chatSend" aria-label="Send"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="M5 12l7-7 7 7"/></svg></button>
+    </div>
+    <div class="status" id="chatStatus"></div>
+  </div>
+</section>
+
 
 <section id="tab-reply">
   <div class="head"><div><div class="kicker">Paste his message from Tipsy and get your character's response</div><h1>Reply</h1></div>
@@ -372,6 +590,10 @@ input[type=range]{width:100%;accent-color:var(--accent)}
     <textarea id="pr-style" data-prompt="style" style="min-height:200px;font-size:13px"></textarea>
     <div class="field-h" style="margin-top:16px"><span class="t">Rules for writing her replies</span><button class="copy" data-preset="reply">Reset</button></div>
     <textarea id="pr-reply" data-prompt="reply" style="min-height:220px;font-size:13px"></textarea>
+    <div class="field-h" style="margin-top:16px"><span class="t">Rules for him in Chat</span><button class="copy" data-preset="char">Reset</button></div>
+    <p class="small" style="margin-top:0">{{name}} becomes his name and {{length}} the reply length. His full background is added after these rules.</p>
+    <textarea id="pr-char" data-prompt="char" style="min-height:260px;font-size:13px"></textarea>
+    <label class="check"><input type="checkbox" id="chatQuote"> In Chat, run the dialogue-quotes check after each message (slower, uses a little more credit)</label>
   </div>
   <div class="panel">
     <div class="eyebrow">Things you've turned down</div>
@@ -394,7 +616,7 @@ input[type=range]{width:100%;accent-color:var(--accent)}
   <button data-tab="create" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.8 4.6L18.5 9l-4.7 1.4L12 15l-1.8-4.6L5.5 9l4.7-1.4z"/></svg>Create</button>
   <button data-tab="ideas"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="13" height="16" rx="2"/><path d="M19 7v12a2 2 0 0 1-2 2H8"/></svg>Ideas<span class="badge" data-ideacount style="display:none"></span></button>
   <button data-tab="build"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>Build</button>
-  <button data-tab="saved"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>Saved</button>
+  <button data-tab="chars"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Chats</button>
     <button data-tab="reply"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M8 9h8M8 13h5"/></svg>Reply</button>
   <button data-tab="roster"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="7" r="4"/><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/></svg>Roster</button>
 </nav>
@@ -463,8 +685,25 @@ let busy=false,controller=null,ideaFilter='all';
 const $=s=>document.querySelector(s);
 function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7);}
-function load(){try{const s=JSON.parse(localStorage.getItem(STORE)||'null');if(s){for(const k of ['settings','roster','ideas','saved','build','inputs','dislikes','chats','replyChar']){if(s[k]!=null)state[k]=s[k];}}}catch(e){}}
-function persist(){try{localStorage.setItem(STORE,JSON.stringify(state));}catch(e){}}
+const KEYS=['settings','roster','ideas','saved','build','inputs','dislikes','chats','replyChar','characters'];
+let idb=null,saveTimer=null;
+function idbOpen(){return new Promise(r=>{try{const q=indexedDB.open('ocstudio',1);q.onupgradeneeded=()=>q.result.createObjectStore('kv');q.onsuccess=()=>r(q.result);q.onerror=()=>r(null);}catch(e){r(null);}});}
+function idbGet(k){return new Promise(r=>{try{const q=idb.transaction('kv').objectStore('kv').get(k);q.onsuccess=()=>r(q.result);q.onerror=()=>r(null);}catch(e){r(null);}});}
+function idbPut(k,v){return new Promise(r=>{try{const t=idb.transaction('kv','readwrite');t.objectStore('kv').put(v,k);t.oncomplete=()=>r(true);t.onerror=()=>r(false);}catch(e){r(false);}});}
+function apply(s){if(s)for(const k of KEYS){if(s[k]!=null)state[k]=s[k];}}
+async function load(){
+  idb=await idbOpen();let s=null;
+  if(idb){const v=await idbGet('state');if(v)try{s=JSON.parse(v);}catch(e){}}
+  if(!s){try{s=JSON.parse(localStorage.getItem(STORE)||'null');}catch(e){}}
+  apply(s);
+  try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist();}catch(e){}
+}
+async function flush(){clearTimeout(saveTimer);saveTimer=null;const j=JSON.stringify(state);
+  let ok=false;if(idb)ok=await idbPut('state',j);
+  if(ok){try{localStorage.removeItem(STORE);}catch(e){}}else{try{localStorage.setItem(STORE,j);}catch(e){}}}
+function persist(){clearTimeout(saveTimer);saveTimer=setTimeout(flush,250);}
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden'&&saveTimer)flush();});
+window.addEventListener('pagehide',()=>{if(saveTimer)flush();});
 function clean(s){return String(s||'').replace(/\*+/g,'').replace(/^#{1,6}\s*/gm,'').replace(/^```\w*\s*$/gm,'').trim();}
 
 /* ---------- API ---------- */
@@ -807,7 +1046,10 @@ function undoField(f){const b=state.build;if(!b||!b.prev||b.prev[f]==null)return
   persist();renderBuild();status('#buildStatus','Switched back. Tap Undo again to return to the changed version.');}
 async function run(steps){
   if(busy)return;setBusy(true);
-  try{for(const s of steps)await s();status('#buildStatus','Done. Copy each field into Tipsy, or tap Save.');}
+  try{for(const s of steps)await s();
+    const b=state.build;
+    if(b&&(b.background||'').trim()&&(b.opening||'').trim()){saveCharAndRoster(true);status('#buildStatus','Done. '+(b.name||'He')+' is in Chats and your roster, ready to go. Any edits you make here are saved when you tap Save.');}
+    else status('#buildStatus','Done.');}
   catch(e){if(e.name==='AbortError'){status('#buildStatus','Stopped.');}else status('#buildStatus',e.message,true);}
   setBusy(false);
 }
@@ -828,7 +1070,7 @@ Rules:
 function replyChars(){
   const out=[],seen=new Set();
   if(state.build&&state.build.name){out.push({key:'c:'+state.build.id,label:'Current build · '+state.build.name,src:state.build});seen.add(state.build.id);}
-  for(const x of state.saved){if(seen.has(x.id))continue;seen.add(x.id);out.push({key:'c:'+x.id,label:'Saved · '+x.name,src:x});}
+  for(const x of state.characters||[]){if(seen.has(x.id))continue;seen.add(x.id);out.push({key:'c:'+x.id,label:'Character · '+x.name,src:x});}
   for(const r of state.roster){out.push({key:'r:'+r.id,label:'Roster · '+r.name,src:{name:r.name,background:r.summary+(r.style?'\n\nHow his opening reads:\n'+r.style:'')}});}
   return out;
 }
@@ -929,28 +1171,268 @@ Rewrite her response with only these changes; keep everything else as it is. Out
   setBusy(false);
 }
 
+
+/* ---------- characters & chat ---------- */
+const CHAR_SYSTEM=`You are {{name}}, the male lead in the writer's private, uncensored adult (18+) roleplay. She plays her own character; you play {{name}} and, only when the scene needs them, side characters.
+
+This is an adult NSFW creative project. When the scene goes there, write sexual content explicitly and in detail. Never soften, censor, fade to black, moralise, add disclaimers or warnings, or break character, unless she writes out of character first.
+
+Rules:
+- Both characters are adults and written as adults.
+- Play ONLY {{name}}. Never write her dialogue, actions, thoughts or feelings, and never decide what she does or how she reacts. React to what she just did, then stop and leave her room to act.
+- Stay true to the character sheet below, including its pacing, stages and rules.
+- Novel-style prose, third person, past tense, close on {{name}}.
+- DIALOGUE RULE: every word anyone says out loud goes inside double quotation marks, every time, including a line after "he said". Never write speech without quotes, or mark it with dashes, colons, italics or a new unquoted paragraph.
+- Never use asterisks. No markdown, no headings, no notes, no options.
+- Keep each reply around {{length}} words.`;
+const PROMPT_LABELS={base:'Rules for creating characters',style:'House style',reply:'Rules for writing her replies',char:'Rules for him in Chat'};
+let chatOpen=null;
+
+function charById(id){return (state.characters||[]).find(c=>c.id===id)||null;}
+function initials(n){return String(n||'?').split(/\s+/).filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase();}
+function avatarHTML(c,cls){return c&&c.avatar?`<img class="${cls}" src="${c.avatar}" alt="">`:`<div class="${cls} noimg">${esc(initials(c&&c.name))}</div>`;}
+function migrateChars(){
+  state.characters=state.characters||[];
+  for(const s of state.saved||[]){if(!charById(s.id))state.characters.push({id:s.id,name:s.name||'Untitled',tagline:s.tagline||'',background:s.background||'',opening:s.opening||'',idea:s.idea||null,avatar:'',herProfile:'',chats:[],activeChat:null,createdAt:s.savedAt||new Date().toISOString()});}
+  state.saved=[];
+}
+let charView='list';
+function lastAct(c){return Math.max(0,...(c.chats||[]).map(x=>Date.parse(x.updated||x.created)||0));}
+function when(t){if(!t)return '';const d=new Date(t),n=new Date();return d.toDateString()===n.toDateString()?d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}):d.toLocaleDateString([],{day:'2-digit',month:'2-digit'});}
+function renderChars(){
+  const el=$('#charList'),list=state.characters||[];
+  $('#charsTitle').textContent=charView==='grid'?'Characters':'Chats';
+  $('#charsKicker').textContent=charView==='grid'?'Everyone you have created':'Pick up where you left off, or start someone new';
+  if(!list.length){el.innerHTML='<div class="empty"><b>No characters yet</b>Tap New character, or build one from an idea.</div>';return;}
+  if(charView==='grid'){
+    el.innerHTML='<div class="viewall"><button class="link" data-view="list">‹ Back to chats</button></div><div class="char-grid">'+list.map(c=>{const n=(c.chats||[]).reduce((a,x)=>a+x.msgs.length,0);return `<article class="char-card">
+      <button class="char-pic" data-chat="${c.id}" aria-label="Chat with ${esc(c.name)}">${avatarHTML(c,'cimg')}</button>
+      <div class="char-info"><h2>${esc(c.name)}</h2>${c.tagline?'<p>'+esc(c.tagline)+'</p>':''}<div class="meta">${(c.chats||[]).length?(c.chats.length+' chat'+(c.chats.length===1?'':'s')+' · '+n+' messages'):'Not started'}</div></div>
+      <div class="card-actions"><button class="btn light" data-chat="${c.id}">${(c.chats||[]).length?'Continue':'Start'}</button><button class="btn ghost" data-fresh="${c.id}">New chat</button><button class="btn quiet" data-edit="${c.id}">Edit</button></div>
+    </article>`;}).join('')+'</div>';return;}
+  const fresh=list.filter(c=>!(c.chats||[]).some(x=>x.msgs.length>1));
+  const going=list.filter(c=>(c.chats||[]).some(x=>x.msgs.length>1)).sort((a,b)=>lastAct(b)-lastAct(a));
+  let h='';
+  h+='<div class="sec-label">START SOMETHING NEW</div><div class="story-row">'+fresh.map(c=>`<button class="story" data-chat="${c.id}"><div class="ring">${avatarHTML(c,'sav')}</div><span class="nm">${esc(c.name.split(' ')[0])}</span></button>`).join('')+'<button class="story" data-view="grid"><div class="plus">+</div><span class="nm">All</span></button></div>';
+  h+='<div class="sec-label">CONTINUE</div>';
+  h+=going.length?'<div class="clist">'+going.map(c=>{const ch=(c.chats||[]).slice().sort((a,b)=>(Date.parse(b.updated||b.created)||0)-(Date.parse(a.updated||a.created)||0))[0];const last=ch&&ch.msgs.length?mtext(ch.msgs[ch.msgs.length-1]):'';const idx=c.chats.length-c.chats.indexOf(ch);
+    return `<button class="crow" data-chat="${c.id}" data-cid="${ch.id}">${avatarHTML(c,'av')}<div style="min-width:0"><b>${esc(c.name)}<small>· chat ${idx}</small></b><div class="prev">${esc(last.replace(/\s+/g,' ').slice(0,140))}</div></div><div class="when">${when(ch.updated||ch.created)}</div></button>`;}).join('')+'</div>':'<div class="empty"><b>No chats yet</b>Tap someone above to start.</div>';
+  el.innerHTML=h;
+}
+
+/* editor */
+let ceId=null,ceAvatar='';
+function openEditor(id){
+  const c=id?charById(id):null;ceId=c?c.id:null;ceAvatar=c?c.avatar||'':'';
+  $('#ceTitle').textContent=c?c.name:'New character';
+  $('#ceName').value=c?c.name:'';$('#ceTag').value=c?c.tagline||'':'';$('#ceHer').value=c?c.herProfile||'':'';
+  $('#ceBg').value=c?c.background||'':'';$('#ceOp').value=c?c.opening||'':'';$('#ceDoc').value='';status('#ceStatus','');
+  $('#ceDelete').style.display=c?'':'none';$('#ceToBuild').style.display=c?'':'none';
+  renderCePic();ceCounts();showTab('charedit');
+}
+function renderCePic(){$('#cePic').innerHTML=ceAvatar?`<img src="${ceAvatar}" alt="">`:'<span>No picture yet</span>';}
+function ceCounts(){$('#ceBgCount').textContent=$('#ceBg').value.length.toLocaleString()+' chars';$('#ceOpCount').textContent=$('#ceOp').value.length.toLocaleString()+' chars';}
+function resizeImage(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>{const img=new Image();img.onload=()=>{const max=640;let w=img.width,h=img.height;const s=Math.min(1,max/Math.max(w,h));w=Math.round(w*s);h=Math.round(h*s);const cv=document.createElement('canvas');cv.width=w;cv.height=h;cv.getContext('2d').drawImage(img,0,0,w,h);res(cv.toDataURL('image/jpeg',0.85));};img.onerror=rej;img.src=r.result;};r.onerror=rej;r.readAsDataURL(file);});}
+function splitDoc(t){
+  t=String(t||'').replace(/\r/g,'');
+  const m=t.match(/^[ \t#*]*(intro(?:duction)? scene|opening scene|opening)[ \t*:]*$/im);
+  let bg=t,op='';
+  if(m){bg=t.slice(0,m.index);op=t.slice(m.index+m[0].length);}
+  bg=bg.replace(/^[ \t#*]*character sheet[ \t*:]*$/im,'');
+  const tidy=x=>x.replace(/\\([\[\]#*_!\-~`.()])/g,'$1').replace(/^[ \t]*#{1,6}[ \t]*/gm,'').replace(/\*\*(.*?)\*\*/g,'$1').replace(/[ \t]+\n/g,'\n').replace(/\n{3,}/g,'\n\n').trim();
+  return {bg:tidy(bg),op:tidy(op),found:!!m};
+}
+function saveEditor(){
+  const name=$('#ceName').value.trim();if(!name){status('#ceStatus','Give him a name first.',true);$('#ceName').focus();return;}
+  let c=ceId?charById(ceId):null;
+  if(!c){c={id:uid(),chats:[],activeChat:null,createdAt:new Date().toISOString()};state.characters.unshift(c);}
+  Object.assign(c,{name,tagline:$('#ceTag').value.trim(),herProfile:$('#ceHer').value,background:$('#ceBg').value.trim(),opening:$('#ceOp').value.trim(),avatar:ceAvatar});
+  persist();renderChars();showTab('chars');
+}
+
+/* chat state */
+function newChat(c){const op=(c.opening||'').trim();const ch={id:uid(),title:'Chat '+((c.chats||[]).length+1)+' · '+new Date().toLocaleDateString(),created:new Date().toISOString(),len:300,msgs:op?[{id:uid(),role:'him',alts:[op],alt:0}]:[]};c.chats=c.chats||[];c.chats.unshift(ch);c.activeChat=ch.id;return ch;}
+function curChat(c){c=c||charById(chatOpen);if(!c)return null;let ch=(c.chats||[]).find(x=>x.id===c.activeChat);if(!ch)ch=(c.chats||[])[0]||newChat(c);c.activeChat=ch.id;return ch;}
+function mtext(m){return m.alts?m.alts[m.alt||0]:m.text||'';}
+function openChat(id){chatOpen=id;const c=charById(id);if(!c)return;curChat(c);persist();showTab('chat');renderChat(true);}
+function dlg(h){return h.replace(/(&quot;|“)([\s\S]*?)(&quot;|”)/g,'<b class="dlg">$1$2$3</b>');}
+function paras(t){return dlg(esc(t)).split(/\n{2,}/).map(p=>'<p>'+p.replace(/\n/g,'<br>')+'</p>').join('');}
+function renderChat(scroll){
+  const c=charById(chatOpen);if(!c)return;const ch=curChat(c);
+  $('#chatAv').innerHTML=avatarHTML(c,'hav');$('#chatName').textContent=c.name;
+  $('#chatSel').innerHTML=c.chats.map(x=>`<option value="${x.id}"${x.id===ch.id?' selected':''}>${esc(x.title)} (${x.msgs.length})</option>`).join('');
+  $('#chatLen').value=String(ch.len||300);$('#chatHer').value=c.herProfile||'';$('#chatPov').value=state.settings.chatPov||'third';
+  const lastHim=(()=>{for(let i=ch.msgs.length-1;i>=0;i--)if(ch.msgs[i].role==='him')return i;return -1;})();
+  const isLast=i=>i===ch.msgs.length-1;
+  const IC={regen:"<svg aria-hidden=\"true\" width=\"15\" height=\"15\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M21 12a9 9 0 1 1-3-6.7L21 8\"/><path d=\"M21 3v5h-5\"/></svg>",pen:"<svg aria-hidden=\"true\" width=\"15\" height=\"15\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 20h9\"/><path d=\"M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z\"/></svg>",copy:"<svg aria-hidden=\"true\" width=\"15\" height=\"15\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><rect x=\"9\" y=\"9\" width=\"12\" height=\"12\" rx=\"2\"/><path d=\"M5 15V5a2 2 0 0 1 2-2h10\"/></svg>"};
+  $('#msgs').innerHTML=ch.msgs.length?ch.msgs.map((m,i)=>{const him=m.role==='him';const nAlt=(m.alts||[]).length;const lastOne=him&&i===lastHim&&isLast(i);
+    const altsH=him&&nAlt>1?`<span class="alts"><button data-alt="${m.id}" data-d="-1" aria-label="Previous version">‹</button>${(m.alt||0)+1}/${nAlt}<button data-alt="${m.id}" data-d="1" aria-label="Next version">›</button></span>`:'';
+    const more=`<div class="mmore" id="mm-${m.id}" style="display:none">${lastOne?'':`<button data-mcopy="${m.id}">Copy</button>`}${him&&!lastOne?`<button data-mchange="${m.id}">Change</button>`:''}<button data-medit="${m.id}">Edit</button><button data-mdel="${m.id}">Delete</button></div>`;
+    return `<div class="msg ${him?'him':'her'}" data-mid="${m.id}">
+    ${him?avatarHTML(c,'mav'):''}
+    <div class="mbody">
+      <div class="mname">${him?esc(c.name):'You'}</div>
+      <div class="mtext" id="mt-${m.id}">${paras(mtext(m))}</div>
+      ${lastOne?`<div class="tbar">${i>0?`<button data-regen="${m.id}" aria-label="Regenerate" title="Regenerate">${IC.regen}</button>`:''}<button data-mchange="${m.id}" aria-label="Change this reply" title="Change">${IC.pen}</button><button data-mcopy="${m.id}" aria-label="Copy" title="Copy">${IC.copy}</button>${altsH}<button data-more="${m.id}" aria-label="More actions" title="More">⋯</button></div>${more}`:`${altsH?`<div class="tbar">${altsH}</div>`:''}<button class="dots" data-more="${m.id}" aria-label="More actions">⋯</button>${more}`}
+      <div class="mfb" id="mfb-${m.id}" style="display:none">
+        <textarea id="mfbt-${m.id}" placeholder="What should change? e.g. Make him colder, and cut the last paragraph."></textarea>
+        <div class="fb-row"><button class="btn" data-applyfb="${m.id}">Apply changes</button><button class="btn quiet" data-mchange="${m.id}">Cancel</button></div>
+      </div>
+    </div></div>`;}).join(''):'<div class="empty"><b>No messages yet</b>This character has no opening. Write her first message below.</div>';
+  $('#chatSub').textContent=busy?c.name.split(' ')[0]+' is writing…':(ch.title.split(' · ')[0]+' · '+ch.msgs.length+' messages');
+  if(scroll)requestAnimationFrame(()=>{const last=$('#msgs').lastElementChild;if(last)last.scrollIntoView({block:'start'});});
+}
+function fillChar(t,c,len){return t.replace(/\{\{name\}\}/g,c.name).replace(/\{\{length\}\}/g,String(len));}
+function hisMessages(c,ch,upto,extra){
+  let sys=fillChar(P('char'),c,ch.len||300)+'\n\nCHARACTER SHEET FOR '+c.name.toUpperCase()+':\n'+(c.background||'(no sheet)');
+  if((c.herProfile||'').trim())sys+="\n\nHER CHARACTER (played by the writer, never by you):\n"+c.herProfile.trim();
+  const hist=ch.msgs.slice(0,upto);let budget=150000,start=hist.length;
+  for(let i=hist.length-1;i>=0;i--){budget-=mtext(hist[i]).length;if(budget<0)break;start=i;}
+  const out=[{role:'system',content:sys},{role:'user',content:start>0?'[The story so far has been going for a while; earlier messages are omitted. Continue naturally.]':'[The roleplay begins.]'}];
+  for(const m of hist.slice(start)){const role=m.role==='him'?'assistant':'user';const t=mtext(m);
+    if(out[out.length-1].role===role&&role!=='system')out[out.length-1].content+='\n\n'+t;else out.push({role,content:t});}
+  if(out[out.length-1].role!=='user')out.push({role:'user',content:extra||'[She waits. Continue the scene as '+c.name+'.]'});
+  else if(extra)out[out.length-1].content+='\n\n'+extra;
+  return out;
+}
+function chatBusy(on,msg){setBusy(on);status('#chatStatus',msg||'',false,!!msg&&on);const c=charById(chatOpen),ch=c&&curChat(c);if(c&&$('#chatSub'))$('#chatSub').textContent=on?c.name.split(' ')[0]+(msg&&/thinking/.test(msg)?' is thinking…':' is writing…'):(ch.title.split(' · ')[0]+' · '+ch.msgs.length+' messages');}
+async function maybeQuote(text,onTok){if(state.settings.chatQuote===false)return text;status('#chatStatus','Checking every line of dialogue is in quotes…',false,true);return quoteCheck(text,onTok);}
+function streamInto(id){return t=>{const el=$('#mt-'+id);if(el)el.innerHTML=paras(t);};}
+async function genHim(mode,mid){
+  if(busy)return;const c=charById(chatOpen),ch=curChat(c);
+  if(!(c.background||'').trim()){status('#chatStatus','This character has no background yet. Add one in Edit character.',true);return;}
+  let m,upto;
+  if(mode==='regen'){m=ch.msgs.find(x=>x.id===mid);upto=ch.msgs.indexOf(m);}
+  else{m={id:uid(),role:'him',alts:[''],alt:0};ch.msgs.push(m);upto=ch.msgs.length-1;renderChat(true);}
+  chatBusy(true,c.name+' is writing…');
+  try{
+    const len=ch.len||300;
+    let out=await callAPI(hisMessages(c,ch,upto),{longForm:true,maxTokens:Math.round(len*2.6)+800,onThink:()=>status('#chatStatus',c.name+' is thinking…',false,true),onToken:streamInto(m.id)});
+    out=clean(out);if(!out)throw new Error('DeepSeek sent back an empty reply. Tap Regenerate.');
+    out=await maybeQuote(out,streamInto(m.id));
+    if(mode==='regen'){m.alts.push(out);m.alt=m.alts.length-1;}else{m.alts=[out];m.alt=0;}ch.updated=new Date().toISOString();
+    persist();renderChat();status('#chatStatus','');
+  }catch(e){
+    if(mode!=='regen'&&!mtext(m))ch.msgs.splice(ch.msgs.indexOf(m),1);
+    persist();renderChat();status('#chatStatus',e.name==='AbortError'?'Stopped.':e.message,e.name!=='AbortError');
+  }
+  chatBusy(false);
+}
+async function sendHer(){
+  if(busy)return;const t=$('#chatIn').value.trim();if(!t){$('#chatIn').focus();return;}
+  const ch=curChat();ch.msgs.push({id:uid(),role:'her',alts:[t],alt:0});ch.updated=new Date().toISOString();$('#chatIn').value='';autoGrow();persist();renderChat(true);
+  await genHim('reply');
+}
+async function writeForMe(){
+  if(busy)return;const c=charById(chatOpen),ch=curChat(c);const dir=$('#chatIn').value.trim();
+  const log=ch.msgs.slice(-14).map(m=>(m.role==='her'?'HER':'HIM')+':\n'+mtext(m).slice(0,5000)).join('\n\n');
+  const pov=(state.settings.chatPov||'third')==='first'?'first person, as her ("I")':'third person ("she")';
+  const prompt=`HIS CHARACTER: ${c.name}
+${(c.background||'').slice(0,20000)}
+
+HER CHARACTER (the one you write):
+${(c.herProfile||'').trim()||'Not described. Keep her consistent with how she has acted in the scene so far.'}
+
+SCENE SO FAR (oldest first):
+${log||'Nothing yet. This is her first message.'}
+
+HOW SHE SHOULD RESPOND:
+${dir||'Her choice: respond the way she naturally would, true to her character.'}
+
+Write her next message in ${pov}, about ${state.settings.chatHerLen||250} words.`;
+  chatBusy(true,'Writing her message…');const before=$('#chatIn').value;
+  try{
+    let out=await callAPI([{role:'system',content:P('reply')},{role:'user',content:prompt}],{longForm:true,maxTokens:1800,onThink:()=>status('#chatStatus','Thinking about her message…',false,true),onToken:t=>{$('#chatIn').value=t;autoGrow();}});
+    out=clean(out);out=await maybeQuote(out,t=>{$('#chatIn').value=t;});
+    $('#chatIn').value=out;autoGrow();status('#chatStatus','Her message is in the box. Edit it if you like, then tap Send.');
+  }catch(e){$('#chatIn').value=before;status('#chatStatus',e.name==='AbortError'?'Stopped.':e.message,e.name!=='AbortError');}
+  chatBusy(false);
+}
+async function changeHim(mid){
+  if(busy)return;const c=charById(chatOpen),ch=curChat(c);const m=ch.msgs.find(x=>x.id===mid);const note=($('#mfbt-'+mid).value||'').trim();
+  if(!note){$('#mfbt-'+mid).focus();return;}
+  const cur=mtext(m),him=m.role==='him';
+  const prompt=`Here is ${him?c.name+"'s":"her"} message in the roleplay:
+
+<<<MESSAGE
+${cur}
+MESSAGE>>>
+
+The writer wants these changes: ${note}
+
+Rewrite the message with only these changes; keep everything else as it is. Output only the revised message.`;
+  chatBusy(true,'Applying your changes…');
+  try{
+    let out=await callAPI([{role:'system',content:him?fillChar(P('char'),c,ch.len||300)+'\n\nCHARACTER SHEET:\n'+(c.background||'').slice(0,30000):P('reply')},{role:'user',content:prompt}],{longForm:true,maxTokens:Math.round(cur.length/3)+1500,onToken:streamInto(mid)});
+    out=clean(out.replace(/^<<<\w+\s*|\s*\w+>>>$/g,''));out=await maybeQuote(out,streamInto(mid));
+    m.alts=m.alts||[cur];m.alts.push(out);m.alt=m.alts.length-1;persist();renderChat();status('#chatStatus','Changes applied. Use ‹ › to switch back to the earlier version.');
+  }catch(e){renderChat();status('#chatStatus',e.name==='AbortError'?'Stopped.':e.message,e.name!=='AbortError');}
+  chatBusy(false);
+}
+function editMsg(mid){
+  const ch=curChat(),m=ch.msgs.find(x=>x.id===mid),el=$('#mt-'+mid);
+  el.innerHTML=`<textarea class="medit" id="me-${mid}" style="min-height:160px"></textarea><div class="fb-row"><button class="btn" data-msave="${mid}">Save</button><button class="btn quiet" data-mcancel="${mid}">Cancel</button></div>`;
+  $('#me-'+mid).value=mtext(m);$('#me-'+mid).focus();
+}
+function autoGrow(){const t=$('#chatIn');if(!t)return;t.style.height='auto';t.style.height=Math.min(t.scrollHeight,window.innerHeight*0.38)+'px';}
+function bindChat(){
+  $('#newChar').onclick=()=>openEditor(null);
+  $('#charList').onclick=e=>{const vw=e.target.closest('[data-view]');if(vw){charView=vw.dataset.view;renderChars();window.scrollTo(0,0);return;}const ch=e.target.closest('[data-chat]'),ed=e.target.closest('[data-edit]'),fr=e.target.closest('[data-fresh]');if(ch&&ch.dataset.cid){const c=charById(ch.dataset.chat);if(c)c.activeChat=ch.dataset.cid;}if(fr){const c=charById(fr.dataset.fresh);newChat(c);persist();openChat(c.id);status('#chatStatus','New chat started from his opening. Earlier chats are in the menu at the top.');}if(ch)openChat(ch.dataset.chat);if(ed)openEditor(ed.dataset.edit);};
+  $('#ceCancel').onclick=()=>showTab('chars');$('#ceSave').onclick=saveEditor;
+  $('#ceFile').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;try{ceAvatar=await resizeImage(f);renderCePic();}catch(x){status('#ceStatus','That picture could not be read.',true);}};
+  $('#ceNoPic').onclick=()=>{ceAvatar='';renderCePic();};
+  $('#ceBg').oninput=ceCounts;$('#ceOp').oninput=ceCounts;
+  $('#ceSplit').onclick=()=>{const t=$('#ceDoc').value;if(!t.trim()){status('#ceStatus','Paste the doc first.',true);return;}
+    if(($('#ceBg').value.trim()||$('#ceOp').value.trim())&&!confirm('Replace the current Background and Opening with the pasted doc?'))return;
+    const r=splitDoc(t);$('#ceBg').value=r.bg;$('#ceOp').value=r.op;$('#ceDoc').value='';ceCounts();
+    if(!$('#ceName').value.trim()){const nm=(r.bg.match(/(?:full name|name)\s*:\s*([^\n]+)/i)||[])[1];if(nm)$('#ceName').value=nm.replace(/[*\\]/g,'').trim().slice(0,50);}
+    status('#ceStatus',r.found?'Split done. Check both boxes, then tap Save.':'No “Intro Scene” heading found, so everything went into Background. Move the opening into the Opening box yourself.',!r.found);};
+  $('#ceDelete').onclick=()=>{const c=charById(ceId);if(c&&confirm('Delete '+c.name+' and all chats with him? This cannot be undone.')){state.characters=state.characters.filter(x=>x.id!==c.id);persist();renderChars();showTab('chars');}};
+  $('#ceToBuild').onclick=()=>{const c=charById(ceId);if(!c)return;state.build={id:c.id,prev:null,idea:c.idea||{title:c.name,name:c.name},name:c.name,tagline:c.tagline||'',background:c.background||'',opening:c.opening||''};state.replyChar='c:'+c.id;persist();renderBuild();showTab('build');};
+  $('#chatBack').onclick=()=>{renderChars();showTab('chars');};
+  $('#chatSel').onchange=e=>{const c=charById(chatOpen);c.activeChat=e.target.value;persist();renderChat(true);};
+  $('#chatNew').onclick=()=>{if(busy)return;const c=charById(chatOpen);newChat(c);persist();renderChat(true);status('#chatStatus','New chat started. Your earlier chats are in the menu at the top.');};
+  $('#chatNew2').onclick=()=>$('#chatNew').onclick();
+  $('#chatOpts').onclick=()=>{const p=$('#chatPanel');p.style.display=p.style.display==='none'?'block':'none';};
+  $('#chatLen').onchange=e=>{curChat().len=Number(e.target.value);persist();};
+  $('#chatPov').onchange=e=>{state.settings.chatPov=e.target.value;persist();};
+  $('#chatHer').onchange=e=>{const c=charById(chatOpen);c.herProfile=e.target.value;persist();};
+  $('#chatEditChar').onclick=()=>openEditor(chatOpen);
+  $('#chatDel').onclick=()=>{const c=charById(chatOpen),ch=curChat(c);if(confirm('Delete “'+ch.title+'”? This cannot be undone.')){c.chats=c.chats.filter(x=>x.id!==ch.id);c.activeChat=null;persist();renderChat(true);}};
+  $('#chatSend').onclick=sendHer;$('#chatWrite').onclick=writeForMe;$('#chatCont').onclick=()=>genHim('continue');
+  $('#chatStop').onclick=()=>{if(controller)controller.abort();};
+  $('#msgs').onclick=async e=>{const t=e.target.closest('button');if(!t)return;const ch=curChat();const d=t.dataset;
+    if(d.mcopy){const m=ch.msgs.find(x=>x.id===d.mcopy);const ok=await copyText(mtext(m));status('#chatStatus',ok?'Copied.':'Copy failed.',!ok);setTimeout(()=>{if($('#chatStatus').textContent==='Copied.')status('#chatStatus','');},1500);}
+    if(d.more){const x=$('#mm-'+d.more);x.style.display=x.style.display==='none'?'flex':'none';return;}
+    if(d.regen)genHim('regen',d.regen);
+    if(d.mchange){const p=$('#mfb-'+d.mchange);p.style.display=p.style.display==='none'?'block':'none';if(p.style.display==='block')$('#mfbt-'+d.mchange).focus();}
+    if(d.applyfb)changeHim(d.applyfb);
+    if(d.alt){const m=ch.msgs.find(x=>x.id===d.alt);m.alt=((m.alt||0)+Number(d.d)+m.alts.length)%m.alts.length;persist();renderChat();}
+    if(d.medit&&!busy)editMsg(d.medit);
+    if(d.msave){const m=ch.msgs.find(x=>x.id===d.msave);const v=$('#me-'+d.msave).value.trim();if(v){m.alts=m.alts||[];m.alts[m.alt||0]=v;}persist();renderChat();}
+    if(d.mcancel)renderChat();
+    if(d.mdel&&!busy){const i=ch.msgs.findIndex(x=>x.id===d.mdel);if(i>=0&&confirm('Delete this message?')){ch.msgs.splice(i,1);persist();renderChat();}}
+  };
+  $('#chatIn').addEventListener('input',autoGrow);
+  $('#chatIn').addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)){e.preventDefault();sendHer();}});
+}
+
 /* ---------- saved & roster ---------- */
-function saveBuild(){
-  const b=state.build;if(!b)return;
-  const copy=JSON.parse(JSON.stringify(b));copy.savedAt=new Date().toISOString();
-  const k=state.saved.findIndex(x=>x.id===b.id);if(k>=0)state.saved[k]=copy;else state.saved.unshift(copy);
-  persist();renderSaved();status('#buildStatus','Saved.');
+function saveBuild(quiet){
+  const b=state.build;if(!b)return;state.characters=state.characters||[];
+  let c=charById(b.id);
+  if(!c){c={id:b.id,avatar:'',herProfile:'',chats:[],activeChat:null,createdAt:new Date().toISOString()};state.characters.unshift(c);}
+  Object.assign(c,{name:b.name||'Untitled',tagline:b.tagline||'',background:b.background||'',opening:b.opening||'',idea:b.idea||null});
+  persist();renderChars();if(quiet!==true)status('#buildStatus','Saved. Open Chats to add a picture and start.');
 }
-function renderSaved(){
-  const el=$('#savedList');
-  if(!state.saved.length){el.innerHTML='<div class="empty"><b>Nothing saved yet</b>Build a character and tap Save.</div>';return;}
-  el.innerHTML='<div class="grid">'+state.saved.map((s,n)=>`<article class="card">
-    <div><h2>${esc(s.name)}</h2><div class="meta">${esc(s.idea&&s.idea.title||'')}${s.savedAt?' · '+new Date(s.savedAt).toLocaleDateString():''}</div></div>
-    ${s.tagline?'<p class="hook">'+esc(s.tagline)+'</p>':''}
-    <div class="card-actions"><button class="btn light" data-open="${n}">Open</button><button class="btn quiet" data-del="${n}">Delete</button></div></article>`).join('')+'</div>';
-}
-function addToRoster(){
+function saveCharAndRoster(quiet){saveBuild(true);addToRoster(true);if(!quiet)status('#buildStatus','Saved. '+(state.build.name||'He')+' is in Chats and your roster, ready to go.');}
+function addToRoster(quiet){
   const b=state.build;if(!b)return;const i=b.idea||{};
   const summary=[i.age?i.age+',':'',i.role?i.role+'.':'',i.setting||'',i.dynamic?'Dynamic: '+i.dynamic+'.':'',i.hook||''].filter(Boolean).join(' ');
   const k=state.roster.findIndex(c=>c.id===b.id);
-  const entry={id:b.id,name:b.name,summary:summary||b.tagline,style:''};
+  const entry={id:b.id,name:b.name,summary:summary||b.tagline,style:(b.opening||'').slice(0,1200)};
   if(k>=0)state.roster[k]=entry;else state.roster.push(entry);
-  persist();renderRoster();status('#buildStatus',b.name+' added to your roster. New ideas will steer away from him.');
+  persist();renderRoster();if(quiet!==true)status('#buildStatus',b.name+' added to your roster. New ideas will steer away from him.');
 }
 function renderRoster(){
   if(!state.roster.length){$('#rosterList').innerHTML='<div class="empty"><b>Your roster is empty</b>Restore your backup in Settings to bring your characters across, or tap Add a character.</div>';return;}
@@ -964,8 +1446,8 @@ function renderRoster(){
 
 /* ---------- UI plumbing ---------- */
 function status(sel,msg,err,load){const el=$(sel);el.textContent=msg||'';el.classList.toggle('err',!!err);el.classList.toggle('loading',!!load&&!!msg);}
-function setBusy(v){busy=v;document.querySelectorAll('#genBtn,#genMore,#buildBtn,#reBg,#reOpen,#replyBtn,#reviseReply,#redoReply,[data-revise],[data-build],[data-more]').forEach(b=>b.disabled=v);$('#stopBtn').style.display=v?'block':'none';$('#replyStop').style.display=v&&$('#tab-reply').classList.contains('on')?'block':'none';}
-function showTab(t){if(t==='reply')renderReply();document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('on',b.dataset.tab===t));document.querySelectorAll('main section').forEach(s=>s.classList.toggle('on',s.id==='tab-'+t));window.scrollTo(0,0);}
+function setBusy(v){busy=v;document.querySelectorAll('#genBtn,#genMore,#buildBtn,#reBg,#reOpen,#replyBtn,#reviseReply,#redoReply,#chatSend,#chatWrite,#chatCont,#chatNew,#chatNew2,[data-regen],[data-applyfb],[data-revise],[data-build],[data-more]').forEach(b=>b.disabled=v);$('#chatStop').style.display=v&&$('#tab-chat').classList.contains('on')?'inline-block':'none';$('#stopBtn').style.display=v?'block':'none';$('#replyStop').style.display=v&&$('#tab-reply').classList.contains('on')?'block':'none';}
+function showTab(t){if(t==='reply')renderReply();if(t==='chars')renderChars();const nav=(t==='chat'||t==='charedit')?'chars':t;document.querySelectorAll('[data-tab]').forEach(b=>b.classList.toggle('on',b.dataset.tab===nav));document.querySelectorAll('main section').forEach(s=>s.classList.toggle('on',s.id==='tab-'+t));window.scrollTo(0,0);}
 function chips(id,groups,key){const el=$(id);const sel=state.inputs[key];
   el.innerHTML=Object.entries(groups).map(([g,list])=>`<div class="grp"><div class="grp-label">${esc(g)}</div><div class="chips">${list.map(x=>`<button class="chip${sel.includes(x)?' on':''}" data-chip="${esc(x)}" aria-pressed="${sel.includes(x)}">${esc(x)}</button>`).join('')}</div></div>`).join('');
   el.onclick=e=>{const c=e.target.closest('[data-chip]');if(!c)return;const v=c.dataset.chip,a=state.inputs[key],k=a.indexOf(v);if(k>=0)a.splice(k,1);else a.push(v);persist();renderChips();};}
@@ -977,17 +1459,16 @@ function pick(groups,n){const keys=Object.keys(groups).sort(()=>Math.random()-.5
 function rnd(a,b){return a+Math.floor(Math.random()*(b-a+1));}
 async function copyText(t){try{await navigator.clipboard.writeText(t);return true;}catch(e){const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();let ok=false;try{ok=document.execCommand('copy');}catch(x){}ta.remove();return ok;}}
 
-PROMPT_DEFAULTS.base=SYSTEM_BASE;PROMPT_DEFAULTS.style=STYLE_NOTES;PROMPT_DEFAULTS.reply=REPLY_SYSTEM;
-function renderPrompts(){for(const k of ['base','style','reply'])$('#pr-'+k).value=P(k);}
+PROMPT_DEFAULTS.base=SYSTEM_BASE;PROMPT_DEFAULTS.style=STYLE_NOTES;PROMPT_DEFAULTS.reply=REPLY_SYSTEM;PROMPT_DEFAULTS.char=CHAR_SYSTEM;
+function renderPrompts(){for(const k of ['base','style','reply','char'])$('#pr-'+k).value=P(k);}
 function init(){
-  load();
   const I=state.inputs;
   I.traits=I.traits||[];I.kinks=I.kinks||'';renderChips();$('#kinks').value=I.kinks;
   $('#surpriseBtn').onclick=()=>{I.genres=pick(GENRES,rnd(2,3));I.dyn=pick(DYNAMICS,rnd(3,4));I.traits=pick(TRAITS,rnd(2,3));persist();renderChips();status('#ideaStatus','Picked '+I.genres.length+' genres, '+I.dyn.length+' tropes and '+I.traits.length+' personality traits. Tap Surprise me again to reshuffle.');};
   $('#clearPicks').onclick=()=>{I.genres=[];I.dyn=[];I.traits=[];persist();renderChips();};
   $('#genreFree').value=I.genreFree||'';$('#arch').value=I.arch||'';$('#her').value=I.her||'';$('#heat').value=I.heat||'explicit';$('#avoid').value=I.avoid||'';$('#count').value=String(I.n||3);$('#avoidRoster').checked=I.avoidRoster!==false;
   $('#apiKey').value=state.settings.apiKey||'';$('#model').value=state.settings.model||'deepseek-v4-flash';if(!(state.settings.temp<=1))state.settings.temp=0.8;if(!state.settings.mode)state.settings.mode='stable';$('#mode').value=state.settings.mode;$('#mode').onchange=e=>{state.settings.mode=e.target.value;persist();$('#tempWrap').style.display=e.target.value==='fast'?'block':'none';};$('#tempWrap').style.display=state.settings.mode==='fast'?'block':'none';$('#temp').value=state.settings.temp;$('#tempVal').textContent=$('#temp').value;
-  state.dislikes=state.dislikes||[];renderIdeas();renderBuild();renderSaved();renderRoster();renderDislikes();
+  state.dislikes=state.dislikes||[];renderIdeas();renderBuild();migrateChars();renderChars();bindChat();renderRoster();renderDislikes();
   $('#dislikeList').onclick=e=>{const b=e.target.closest('[data-undl]');if(b){state.dislikes.splice(+b.dataset.undl,1);persist();renderDislikes();}};
 
   document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
@@ -1013,6 +1494,7 @@ function init(){
   document.querySelectorAll('[data-prompt]').forEach(t=>t.onchange=()=>{const k=t.dataset.prompt;state.settings.prompts[k]=t.value===PROMPT_DEFAULTS[k]?'':t.value;persist();status('#setStatus','Instructions saved.');});
   document.querySelectorAll('[data-preset]').forEach(b=>b.onclick=()=>{const k=b.dataset.preset;if(confirm('Put back the original instructions for this box?')){state.settings.prompts[k]='';persist();renderPrompts();status('#setStatus','Original instructions restored.');}});
   renderReply();
+  $('#chatQuote').checked=state.settings.chatQuote!==false;$('#chatQuote').onchange=e=>{state.settings.chatQuote=e.target.checked;persist();};
   $('#replyChar').onchange=e=>{state.replyChar=e.target.value;$('#herOut').value='';persist();renderReply();};
   $('#herProfile').onchange=()=>{const ch=chat();if(ch){ch.herProfile=$('#herProfile').value;persist();}};
   $('#replyBtn').onclick=()=>writeReply('new');
@@ -1031,10 +1513,7 @@ function init(){
   $('#stopBtn').onclick=()=>{if(controller)controller.abort();};
   for(const f of ['name','tagline','background','opening']){$('#f-'+f).addEventListener('input',e=>{if(state.build){state.build[f]=e.target.value;count(f);}});$('#f-'+f).addEventListener('change',persist);}
   document.querySelectorAll('[data-copy]').forEach(b=>b.onclick=async()=>{const ok=await copyText($('#f-'+b.dataset.copy).value);b.textContent=ok?'Copied':'Copy failed';setTimeout(()=>b.textContent='Copy',1500);});
-  $('#saveBuild').onclick=saveBuild;$('#toRoster').onclick=addToRoster;
-  $('#savedList').onclick=e=>{const o=e.target.closest('[data-open]'),d=e.target.closest('[data-del]');
-    if(o){state.build=JSON.parse(JSON.stringify(state.saved[+o.dataset.open]));state.replyChar='c:'+state.build.id;persist();renderBuild();showTab('build');}
-    if(d&&confirm('Delete this saved character?')){state.saved.splice(+d.dataset.del,1);persist();renderSaved();}};
+  $('#saveBuild').onclick=()=>saveCharAndRoster(false);
   $('#rosterList').addEventListener('change',e=>{const t=e.target;if(t.dataset.rf){state.roster[+t.dataset.n][t.dataset.rf]=t.value;persist();}});
   $('#rosterList').onclick=e=>{const d=e.target.closest('[data-rdel]');if(d&&confirm('Remove '+state.roster[+d.dataset.rdel].name+' from the roster?')){state.roster.splice(+d.dataset.rdel,1);persist();renderRoster();}};
   $('#addChar').onclick=()=>{state.roster.push({id:uid(),name:'New character',summary:'',style:''});persist();renderRoster();};
@@ -1046,9 +1525,9 @@ function init(){
   $('#importBtn').onclick=()=>$('#importFile').click();
   $('#importFile').onchange=async e=>{const f=e.target.files[0];if(!f)return;e.target.value='';try{const d=JSON.parse(await f.text());
     if(d.type==='oc-studio-roster'){const have=new Set(state.roster.map(c=>(c.name||'').trim().toLowerCase()));let n=0;for(const c of d.roster||[]){if(!have.has((c.name||'').trim().toLowerCase())){state.roster.push(Object.assign({},c,{id:c.id&&!state.roster.some(r=>r.id===c.id)?c.id:uid()}));n++;}}persist();renderRoster();status('#setStatus',n?'Added '+n+' character'+(n===1?'':'s')+' to your roster. Characters you already had were left as they are.':'Your roster already has all of these characters.');return;}
-    const key=state.settings.apiKey;for(const k of ['roster','ideas','saved','build','inputs','settings','dislikes','chats','replyChar']){if(d[k]!=null)state[k]=d[k];}state.settings.apiKey=key;persist();location.reload();}catch(x){status('#setStatus','That file could not be read.',true);}};
+    const key=state.settings.apiKey;for(const k of KEYS){if(d[k]!=null)state[k]=d[k];}state.settings.apiKey=key;await flush();location.reload();}catch(x){status('#setStatus','That file could not be read.',true);}};
 }
-init();
+(async()=>{await load();init();})();
 if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost'))navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
 </body>
